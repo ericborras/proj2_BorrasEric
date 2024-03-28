@@ -142,8 +142,8 @@ class Usuari(models.Model):
             'login': self.login,
             'contrasenya': self.contrasenya,
             'nom': self.nom,
-            'id_tipus_usuari': self.id_tipus_usuari.id
-            
+            'id_tipus_usuari': self.id_tipus_usuari.id,
+            'tipus_usuari_nom': self.id_tipus_usuari.nom    
         }
 
 

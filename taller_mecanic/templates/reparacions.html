@@ -1,10 +1,67 @@
 {% extends 'layouts/base.html' %}
+
 {% load static %}
 
 {% block content %}
+{% include 'layouts/nav.html' %}
+    
+
+<div class="row">
+    <div class="col-lg-2 col-xs-2">&nbsp;</div>
+    <div class="col-lg-4 col-xs-4"><h2>Reparacions</h2></div>
+    <div class="col-lg-6 col-xs-6">&nbsp;</div>
+</div>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+        background-color: #f2f2f2;
+    }
+
+    @media screen and (max-width: 600px) {
+        table {
+            overflow-x: auto;
+            display: block;
+        }
+    }
+</style>
+<div class="container">
+    <table>
+        <thead>
+            <tr>
+                <th>Data alta</th>
+                <th>Estat</th>
+                <th>Vehicle</th>
+                <th>Client</th>
+                <th>Accions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>John</td>
+                <td>Doe</td>
+                <td>30</td>
+                <td>New York</td>
+                <td>USA</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 
-<h1>Reparacions</h1>
+
+<!--
 <h1>{{ dades_usuari.id }}</h1>
 <h1>{{ dades_usuari.nom }}</h1>
 <h1>TIPUS USUARI{{ dades_usuari.id_tipus_usuari }}</h1>
@@ -13,5 +70,5 @@
     {% csrf_token %}
     <button type="submit">Eliminar sesión</button>
 </form>
-
+-->
 {% endblock %}
