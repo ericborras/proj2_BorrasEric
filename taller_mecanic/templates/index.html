@@ -15,6 +15,7 @@
                 <div class="error-message" id="usuario-error-message"></div>
             </div>
             <div class="form-group">
+                {% csrf_token %}
                 <input type="password" class="form-control" placeholder="Contrasenya" id="password" required>
                 <i class="show-password fas fa-eye-slash"></i>
                 <div class="error-message" id="contraseña-error-message"></div>
@@ -23,56 +24,6 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function(){
-            //Establir focus al input usuari
-            $('#usuari').focus();
-            $('#usuari').keypress(executarEnter);
-            $('#password').keypress(executarEnter);
-
-            
-
-            $('.show-password').click(function(){
-                let passwordField = $(this).prev('input');
-                let passwordFieldType = passwordField.attr('type');
-                if(passwordFieldType == 'password') {
-                    passwordField.attr('type', 'text');
-                    $(this).removeClass('fa-eye-slash').addClass('fa-eye');
-                } else {
-                    passwordField.attr('type', 'password');
-                    $(this).removeClass('fa-eye').addClass('fa-eye-slash');
-                }
-            });
-        });
-
-        function executarEnter(event) {
-            //KeyCode 13 => Enter
-            if (event.keyCode === 13 || event.type==='click') { 
-                let usuari = $('#usuari').val().trim();
-                let password = $('#password').val().trim();
-
-                // Verificar si los campos están vacíos
-                if (usuari === '') {
-                    $('#usuari').addClass('error-border'); // Añadir clase de borde de error al campo de usuario
-                    $('#usuario-error-message').text("L'usuari és obligatori");
-                    
-                } else {
-                    $('#usuari').removeClass('error-border'); // Quitar clase de borde de error del campo de usuario si no está vacío
-                    $('#usuario-error-message').text(''); // Limpiar el mensaje de error si el campo no está vacío
-                }
-                
-                if (password === '') {
-                    $('#password').addClass('error-border'); // Añadir clase de borde de error al campo de contraseña
-                    $('#contraseña-error-message').text("La contrasenya és obligatòria");
-                    return;
-                } else {
-                    $('#password').removeClass('error-border'); // Quitar clase de borde de error del campo de contraseña si no está vacío
-                    $('#contraseña-error-message').text(''); // Limpiar el mensaje de error si el campo no está vacío
-                }
-            }
-        }
-    </script>
-
-
+    <script src="{% static '/javascript/login.js' %}"></script>
 
 {% endblock %}

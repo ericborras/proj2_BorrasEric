@@ -1,0 +1,17 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<h1>Reparacions</h1>
+<h1>{{ dades_usuari.id }}</h1>
+<h1>{{ dades_usuari.nom }}</h1>
+<h1>TIPUS USUARI{{ dades_usuari.id_tipus_usuari }}</h1>
+
+<form action="{% url 'tanca_sessio' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Eliminar sesión</button>
+</form>
+
+{% endblock %}

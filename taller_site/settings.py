@@ -35,13 +35,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'taller_mecanic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'taller_mecanic',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +85,8 @@ DATABASES = {
         'USER': "root"
     }
 }
+
+#AUTH_USER_MODEL = 'taller_mecanic.Usuari'
 
 
 # Password validation
