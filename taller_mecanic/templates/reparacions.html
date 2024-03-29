@@ -68,13 +68,18 @@
     .b_elimina_filtre{
         width: 45px;
         height: 45px;
-        background-color: rgba(236, 169, 23, 0.918); 
-        color: #3f3e3d;border:0px;
+        color: rgba(236, 169, 23, 0.918); 
+        background-color: #3f3e3d;border:0px;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+        
     }
 
     .b_elimina_filtre:hover{
-        color: rgba(236, 169, 23, 0.918); 
-        background-color: #3f3e3d;border:0px;
+        background-color: rgba(236, 169, 23, 0.918); 
+        color: #3f3e3d;border:0px;
     }
 
     
@@ -84,12 +89,13 @@
 <body>
     <div class="row">
         <div class="col-lg-1 col-xs-1">&nbsp;</div>
-        <div class="col-lg-5 col-xs-5"><h2><i class="fa-solid fa-wrench"></i> Reparacions</h2></div>
+        <div class="col-lg-5 col-xs-5"><h2> Reparacions <i class="fa-solid fa-wrench"></i></h2></div>
         <div class="col-lg-6 col-xs-6">&nbsp;</div>
 
         <div class="col-lg-12 col-xs-12">&nbsp;</div>
 
         <div class="col-lg-1 col-xs-1">&nbsp;</div>
+        {% csrf_token %}
         <div class="col-lg-3 col-xs-12">
             <label>Data alta: </label>
             <input type="date" id="f_data_alta" />
@@ -105,6 +111,7 @@
                 {% endfor %}
             </select>
         </div>
+        
 
         <div class="col-lg-3 col-xs-12">
             <label>Marca / Model: </label>
@@ -135,32 +142,40 @@
         <div class="col-lg-2 col-xs-2">&nbsp;</div>
 
         <div class="col-lg-1 col-xs-1">&nbsp;</div>
-        <div class="col-lg-3 col-xs-3">
+        <div class="col-lg-3 col-xs-3" style="display:none;">
             <label>Pagada? </label>
             <input type="checkbox" id="f_pagada"/>
         </div>
     </div>
+
+    <div class="col-lg-12 col-xs-12">
         
+        <div class="pagination" id="pagination"></div><br/>
+
+        <button class="b_elimina_filtre" title="Elimina filtres actuals" id="b_elimina_filtres" style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;">
+            <i class="fa-solid fa-plus fa-xl"></i>
+        </button>
         
-        <div class="col-lg-12 col-xs-12">
-            <div class="pagination" id="pagination"></div><br/>
-            <table id="myTable" style="margin-left: 50px; margin-right: 50px;">
-                <thead>
-                    <tr>
-                        <th class="text-center">Data alta</th>
-                        <th class="text-center">Estat</th>
-                        <th class="text-center">Vehicle</th>
-                        <th class="text-center">Client</th>
-                        <th class="text-center">Ultima modificació</th>
-                        <th style="width:20%">Accions</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                   
-                </tbody>
-            </table>
-        </div>
+        <table id="myTable" style="margin-left: 50px; margin-right: 50px;">
+            <thead>
+                <tr>
+                    <th class="text-center">Data alta</th>
+                    <th class="text-center">Estat</th>
+                    <th class="text-center">Vehicle</th>
+                    <th class="text-center">Client</th>
+                    <th class="text-center">Ultima modificació</th>
+                    <th style="width:20%">Accions</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-lg-12 col-xs-12">&nbsp;</div>
+
     </div>
 </body>
 
@@ -174,12 +189,12 @@
     // Número de registros por página
 const TOTAL_REGISTRES_PAGINA = 20;
 const BTN_PAGINACIO = 4; // Número máximo de botones de página a mostrar
-
+var data
 $(document).ready(function() {
     // Handler for .ready() called.
     var reparacions_str = "{{ reparacions|safe }}";
     var reparacions_str_f = reparacions_str.replace(/'/g, '"');
-    var data = JSON.parse(reparacions_str_f);
+    data = JSON.parse(reparacions_str_f);
     generatePagination(1, data);
     displayData(1, data);
 
@@ -187,11 +202,105 @@ $(document).ready(function() {
         $('.js-example-basic-multiple').select2();
     });
 
+    
     document.getElementById('b_elimina_filtres').addEventListener('click',f_eliminaFiltres);
+
+    document.getElementById('f_data_alta').addEventListener('change',f_filtraReparacions);
+
+    try{
+        var select = $('#f_estat');
+        // Agregar un event listener para el evento change de Select2
+        select.on('select2:select select2:unselect', function (e) {
+            // Obtener los elementos seleccionados
+            //var selectedOptions = select.val();
+            f_filtraReparacions();
+        });
+    }catch(e){};
+    
+    document.getElementById('f_marca_model').addEventListener('input',f_filtraReparacions);
+    document.getElementById('f_matricula').addEventListener('input',f_filtraReparacions);
+    document.getElementById('f_client').addEventListener('input',f_filtraReparacions);
+    document.getElementById('f_poblacio').addEventListener('input',f_filtraReparacions);
+    try{
+        document.getElementById('f_pagada').addEventListener('change',f_filtraReparacions);
+    }catch(e){};
+    
 });
 
-function f_eliminaFiltres(){
+function f_filtraReparacions(){
+    let f_data_alta = document.getElementById('f_data_alta').value;
+    let f_estat = "";
+    try{
+        //f_estat = $('#f_estat').val();
+        f_estat = $('#f_estat').val() ? $('#f_estat').val().join(',') : '';
+    }catch(e){};
+    
+    let f_marca_model = document.getElementById('f_marca_model').value;
+    let f_matricula = document.getElementById('f_matricula').value;
+    let f_client = document.getElementById('f_client').value;
+    let f_poblacio = document.getElementById('f_poblacio').value;
+    let f_pagada = false; 
+    try{
+        f_pagada = document.getElementById('f_pagada').checked;
+    }catch(e){};
 
+    console.info("F_ESTAT: "+f_estat);
+    
+    var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+    $.ajax({
+        type: 'POST',
+        url: '/filtrar_reparacions/',
+        data: {
+            'f_data_alta': f_data_alta,
+            'f_estat': f_estat,
+            'f_marca_model': f_marca_model,
+            'f_matricula': f_matricula,
+            'f_client': f_client,
+            'f_poblacio': f_poblacio,
+            'f_pagada': f_pagada,
+            'csrfmiddlewaretoken': csrfToken,
+        },
+        success: function(data) {
+            if (data.success) {
+                //Retorn de JSON amb dades filtrades
+                console.info(data.data)
+                generatePagination(1, data.data);
+                displayData(1, data.data);
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Filtrar reparacions",
+                    text: "S'ha produït un error filtrant les reparacions",
+                });
+            }
+        },
+        error: function() {
+            Swal.fire({
+                icon: "error",
+                title: "Filtrar reparacions",
+                text: "S'ha produït un error filtrant les reparacions",
+            });
+        }
+    });
+
+}
+
+function f_eliminaFiltres(){
+    document.getElementById('f_data_alta').value = "";
+    document.getElementById('f_marca_model').value = "";
+    document.getElementById('f_matricula').value = "";
+    document.getElementById('f_client').value = "";
+    document.getElementById('f_poblacio').value = "";
+    document.getElementById('f_pagada').checked = false;
+
+    var select2Element = $('#f_estat');
+    // Desseleccionar todas las opciones
+    select2Element.val(null).trigger('change');
+
+    //Establir taula estat inicial
+    generatePagination(1, data);
+    displayData(1, data);
+    
 }
 
 // Función para mostrar los datos paginados
@@ -204,8 +313,8 @@ function displayData(pageNum, data) {
         var row = table.insertRow();
         row.insertCell(0).innerHTML = data[i].data_alta;
         row.insertCell(1).innerHTML = data[i].estat_reparacio;
-        row.insertCell(2).innerHTML = data[i].marca_model;
-        row.insertCell(3).innerHTML = data[i].nom + ' ' + data[i].cognoms + ' - ' + data[i].telefon;
+        row.insertCell(2).innerHTML = '('+data[i].matricula+') '+ data[i].marca_model;
+        row.insertCell(3).innerHTML = data[i].nom + ' ' + data[i].cognoms + ' - ' + data[i].telefon+' ('+data[i].ciutat+")";
         row.insertCell(4).innerHTML = data[i].nom_usuari + ' (' + data[i].tipus_usuari + ')';
         row.insertCell(5).innerHTML = '';
         row.insertCell(6).innerHTML = ''; // Ajusta esto según tus necesidades

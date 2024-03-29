@@ -28,7 +28,7 @@ def reparacions(request):
             Usuaris recepció han de poder veure totes les reparacions (per defecte les tancades i
             pendents de facturar), però han de poder veure també la resta.
     '''
-    print(request.session['dades_usuari'])
+    #print(request.session['dades_usuari'])
     estats_reparacio = utils.get_estats_reparacio()
     if(request.session['dades_usuari']['id_tipus_usuari'] == 2):
         reparacions = utils.reparacions_mecanic(request)
@@ -42,3 +42,20 @@ def reparacions(request):
 def tanca_sessio(request):
     request.session.flush()
     return redirect('login')
+
+def filtrar_reparacions(request):
+    if request.method == 'POST':
+        f_data_alta = request.POST.get('f_data_alta')
+        
+        f_estat = request.POST.get('f_estat')
+        print("F_ESTAT: ",f_estat)
+        f_marca_model = request.POST.get('f_marca_model')
+        f_matricula = request.POST.get('f_matricula')
+        f_client = request.POST.get('f_client')
+        f_poblacio = request.POST.get('f_poblacio')
+        f_pagada = request.POST.get('f_pagada')
+
+        return utils.filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricula, f_client, f_poblacio, f_pagada)
+
+        
+    return render(request, 'reparacions.html')

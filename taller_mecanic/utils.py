@@ -43,7 +43,7 @@ def reparacions_mecanic(request):
             WHEN LENGTH(mm.nom) > 50 THEN CONCAT(LEFT(mm.nom, 47), '...') 
             ELSE mm.nom 
             END AS marca_model,
-            c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari
+            c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat
             FROM reparacio r LEFT JOIN estat_reparacio er ON r.id_estat_reparacio = er.id
                                 LEFT JOIN vehicle v ON r.id_vehicle = v.id
                                 LEFT JOIN marca_model mm ON v.id_marca_model = mm.id
@@ -74,7 +74,8 @@ def reparacions_mecanic(request):
             "cognoms": row[10],
             "telefon": row[11],
             "nom_usuari": row[12],
-            "tipus_usuari": row[13]
+            "tipus_usuari": row[13],
+            "ciutat": row[14]
         }
         data.append(row_dict)
 
@@ -89,7 +90,7 @@ def reparacions_recepcio(request):
             WHEN LENGTH(mm.nom) > 50 THEN CONCAT(LEFT(mm.nom, 47), '...') 
             ELSE mm.nom 
             END AS marca_model,
-            c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari
+            c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat
             FROM reparacio r LEFT JOIN estat_reparacio er ON r.id_estat_reparacio = er.id
                                 LEFT JOIN vehicle v ON r.id_vehicle = v.id
                                 LEFT JOIN marca_model mm ON v.id_marca_model = mm.id
@@ -120,7 +121,8 @@ def reparacions_recepcio(request):
             "cognoms": row[10],
             "telefon": row[11],
             "nom_usuari": row[12],
-            "tipus_usuari": row[13]
+            "tipus_usuari": row[13],
+            "ciutat": row[14]
         }
         data.append(row_dict)
 
@@ -142,4 +144,111 @@ def get_estats_reparacio():
         estat_reparacio = models.EstatReparacio(*row)
         data.append(estat_reparacio)
     return data
+
+def filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricula, f_client, f_poblacio, f_pagada):
+    if(request.session['dades_usuari']['id_tipus_usuari'] == 2):
+        #Mecànic
+        valores_lista = "0"
+        if(len(f_estat)==0):
+            f_estat = ""
+        else:
+            valores_lista = f_estat.split(',')
+
+        # Convierte cada cadena en un número entero
+        valores_enteros = [int(valor) for valor in valores_lista]
+
+        # Crea una tupla con los números convertidos
+        tupla_valores = tuple(valores_enteros)
+
+        query = """
+            SELECT r.id, DATE_FORMAT(r.data_alta, '%%d/%%m/%%Y') AS data_alta, r.id_estat_reparacio, r.id_usuari, r.id_vehicle, er.nom AS estat_reparacio, v.matricula, 
+            v.id_marca_model, 
+            CASE 
+            WHEN LENGTH(mm.nom) > 50 THEN CONCAT(LEFT(mm.nom, 47), '...') 
+            ELSE mm.nom 
+            END AS marca_model,
+            c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat
+            FROM reparacio r LEFT JOIN estat_reparacio er ON r.id_estat_reparacio = er.id
+                                LEFT JOIN vehicle v ON r.id_vehicle = v.id
+                                LEFT JOIN marca_model mm ON v.id_marca_model = mm.id
+                                LEFT JOIN clients c ON v.id_client = c.id
+                                LEFT JOIN usuari u ON r.id_usuari = u.id
+                                LEFT JOIN tipus_usuari tu ON u.id_tipus_usuari = tu.id
+            WHERE r.id_estat_reparacio = 1 and (''=%s OR DATE_FORMAT(r.data_alta, '%%Y-%%m-%%d')=%s)
+                                        and ('' in %s OR r.id_estat_reparacio in %s)
+                                        and ('' = UPPER(%s) OR UPPER(mm.nom) like %s)
+                                        and ('' = UPPER(%s) OR UPPER(v.matricula) like %s)
+                                        and ('' = UPPER(%s) OR UPPER(c.nom) like %s OR UPPER(c.cognoms) like %s)
+                                        and ('' = UPPER(%s) OR UPPER(c.ciutat) like %s)
+            ORDER BY r.data_alta DESC
+            """
+        
+    elif(request.session['dades_usuari']['id_tipus_usuari'] == 1):
+        #Recepcio
+        #Mecànic
+        valores_lista = "0"
+        if(len(f_estat)==0):
+            f_estat = ""
+        else:
+            valores_lista = f_estat.split(',')
+
+        # Convierte cada cadena en un número entero
+        valores_enteros = [int(valor) for valor in valores_lista]
+
+        # Crea una tupla con los números convertidos
+        tupla_valores = tuple(valores_enteros)
+        query = """
+                SELECT r.id, DATE_FORMAT(r.data_alta, '%%d/%%m/%%Y') AS data_alta, r.id_estat_reparacio, r.id_usuari, r.id_vehicle, er.nom AS estat_reparacio, v.matricula, 
+                v.id_marca_model, 
+                CASE 
+                WHEN LENGTH(mm.nom) > 50 THEN CONCAT(LEFT(mm.nom, 47), '...') 
+                ELSE mm.nom 
+                END AS marca_model,
+                c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat
+                FROM reparacio r LEFT JOIN estat_reparacio er ON r.id_estat_reparacio = er.id
+                                    LEFT JOIN vehicle v ON r.id_vehicle = v.id
+                                    LEFT JOIN marca_model mm ON v.id_marca_model = mm.id
+                                    LEFT JOIN clients c ON v.id_client = c.id
+                                    LEFT JOIN usuari u ON r.id_usuari = u.id
+                                    LEFT JOIN tipus_usuari tu ON u.id_tipus_usuari = tu.id
+                WHERE (''=%s OR DATE_FORMAT(r.data_alta, '%%Y-%%m-%%d')=%s)
+                                            and ('' in %s OR r.id_estat_reparacio in %s)
+                                            and ('' = UPPER(%s) OR UPPER(mm.nom) like %s)
+                                            and ('' = UPPER(%s) OR UPPER(v.matricula) like %s)
+                                            and ('' = UPPER(%s) OR UPPER(c.nom) like %s OR UPPER(c.cognoms) like %s)
+                                            and ('' = UPPER(%s) OR UPPER(c.ciutat) like %s)
+                ORDER BY r.data_alta DESC
+                """
+    else:
+        return None
     
+    with connection.cursor() as cursor:
+        print("Consulta SQL con parámetros sustituidos:")
+        print(cursor.mogrify(query, [f_data_alta, f_data_alta,tupla_valores,tupla_valores, f_marca_model+'%', f_marca_model+'%', f_matricula+'%', f_matricula+'%', f_client+'%', f_client+'%', '%'+f_client+'%', '%'+f_poblacio+'%', '%'+f_poblacio+'%']))
+
+        cursor.execute(query, [f_data_alta,f_data_alta,tupla_valores,tupla_valores, f_marca_model+'%', f_marca_model+'%', f_matricula+'%', f_matricula+'%', f_client+'%', f_client+'%', '%'+f_client+'%', '%'+f_poblacio+'%', '%'+f_poblacio+'%'])
+        results = cursor.fetchall()
+
+    data = []
+    
+    for row in results:
+        row_dict = {
+            "id": row[0],
+            "data_alta": row[1],
+            "id_estat_reparacio": row[2],
+            "id_usuari": row[3],
+            "id_vehicle": row[4],
+            "estat_reparacio": row[5],
+            "matricula": row[6],
+            "id_marca_model": row[7],
+            "marca_model": row[8],
+            "nom": row[9],
+            "cognoms": row[10],
+            "telefon": row[11],
+            "nom_usuari": row[12],
+            "tipus_usuari": row[13],
+            "ciutat": row[14]
+        }
+        data.append(row_dict)
+
+    return JsonResponse({'success' : True, 'data': data})
