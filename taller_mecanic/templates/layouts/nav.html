@@ -15,6 +15,7 @@
                     <img src="{% static '/img/logo.PNG' %}" class="foto_logo"/>
                 </a>
               </div>
+
               
               <div class="col-sm justify-content-end" style="display:flex !important;margin-top:45px;">
                 
@@ -43,6 +44,9 @@
       </div>
       <div id="nav-content" tabindex="0">
         <ul>
+            {% if dades_usuari.id_tipus_usuari == 1 %}
+            <li><a href="{% url 'nova_reparacio' %}"><i class="fa-solid fa-plus"></i> Reparació</a></li>
+            {% endif %}
             <li><a href="{% url 'reparacions' %}"><i class="fa-solid fa-wrench"></i> Reparacions</a></li>
         </ul>
       </div>

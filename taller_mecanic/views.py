@@ -59,3 +59,9 @@ def filtrar_reparacions(request):
 
         
     return render(request, 'reparacions.html')
+
+
+def nova_reparacio(request):
+    estats_reparacio = utils.get_estats_reparacio()
+
+    return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari']})
