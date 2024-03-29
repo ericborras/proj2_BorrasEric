@@ -4,14 +4,6 @@
 
 {% block content %}
 {% include 'layouts/nav.html' %}
-    
-
-<div class="row">
-    <div class="col-lg-2 col-xs-2">&nbsp;</div>
-    <div class="col-lg-4 col-xs-4"><h2>Reparacions</h2></div>
-    <div class="col-lg-6 col-xs-6">&nbsp;</div>
-</div>
-
 <style>
     table {
         width: 100%;
@@ -23,52 +15,253 @@
         padding: 8px;
         text-align: left;
         border-bottom: 1px solid #ddd;
+        border-right: 1px solid #ddd; /* Agregar borde derecho */
+        border-left: 1px solid #ddd;
     }
 
+    tr {
+        border-bottom: 1px solid #ddd; /* Agregar borde inferior */
+    }
+
+    /*
     tr:hover {
         background-color: #f2f2f2;
     }
+    */
 
-    @media screen and (max-width: 600px) {
-        table {
-            overflow-x: auto;
-            display: block;
-        }
+    /* Estilos del paginador */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
     }
+
+    .pagination button {
+        padding: 8px 16px;
+        margin: 0 5px;
+        cursor: pointer;
+        background-color: #f2f2f2;
+        border: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+    .pagination button:hover {
+        background-color: rgba(236, 169, 23, 0.918);
+    }
+
+    .pagination button.active {
+        background-color: #3f3e3d;
+        color: white;
+    }
+
+    .pagination button.active:hover {
+        background-color: rgba(236, 169, 23, 0.918);
+        color: white;
+    }
+
+    thead {
+        background-color: #3f3e3d;
+        color: rgba(236, 169, 23, 0.918);
+    }
+
+    .b_elimina_filtre{
+        width: 45px;
+        height: 45px;
+        background-color: rgba(236, 169, 23, 0.918); 
+        color: #3f3e3d;border:0px;
+    }
+
+    .b_elimina_filtre:hover{
+        color: rgba(236, 169, 23, 0.918); 
+        background-color: #3f3e3d;border:0px;
+    }
+
+    
 </style>
-<div class="container">
-    <table>
-        <thead>
-            <tr>
-                <th>Data alta</th>
-                <th>Estat</th>
-                <th>Vehicle</th>
-                <th>Client</th>
-                <th>Accions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>John</td>
-                <td>Doe</td>
-                <td>30</td>
-                <td>New York</td>
-                <td>USA</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<body>
+    <div class="row">
+        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+        <div class="col-lg-5 col-xs-5"><h2><i class="fa-solid fa-wrench"></i> Reparacions</h2></div>
+        <div class="col-lg-6 col-xs-6">&nbsp;</div>
+
+        <div class="col-lg-12 col-xs-12">&nbsp;</div>
+
+        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+        <div class="col-lg-3 col-xs-12">
+            <label>Data alta: </label>
+            <input type="date" id="f_data_alta" />
+        </div>
+
+        
+        <div class="col-lg-3 col-xs-12">
+            <label>Estat: </label>
+            <select class="js-example-basic-multiple" name="f_estat[]" id="f_estat" multiple="multiple" style="width: 220px;">
+                <!--<option value="-1"></option>--> 
+                {% for er in estats_reparacio %}
+                    <option value="{{ er.id }}">{{ er.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-lg-3 col-xs-12">
+            <label>Marca / Model: </label>
+            <input type="text" id="f_marca_model" />
+        </div>
+        <div class="col-lg-2 col-xs-2">
+            
+            <button class="b_elimina_filtre" title="Elimina filtres actuals" id="b_elimina_filtres">
+                <i class="fa-solid fa-broom-ball fa-xl"></i>
+            </button>
+            
+        </div>
+        
+        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+        <div class="col-lg-3 col-xs-12">
+            <label>Matrícula: </label>
+            <input type="text" id="f_matricula"/>
+        </div>
+        
+        <div class="col-lg-3 col-xs-12">
+            <label>Client: </label>
+            <input type="text" id="f_client"/>
+        </div>
+        <div class="col-lg-3 col-xs-12">
+            <label>Població: </label>
+            <input type="text" id="f_poblacio"/>
+        </div>
+        <div class="col-lg-2 col-xs-2">&nbsp;</div>
+
+        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+        <div class="col-lg-3 col-xs-3">
+            <label>Pagada? </label>
+            <input type="checkbox" id="f_pagada"/>
+        </div>
+    </div>
+        
+        
+        <div class="col-lg-12 col-xs-12">
+            <div class="pagination" id="pagination"></div><br/>
+            <table id="myTable" style="margin-left: 50px; margin-right: 50px;">
+                <thead>
+                    <tr>
+                        <th class="text-center">Data alta</th>
+                        <th class="text-center">Estat</th>
+                        <th class="text-center">Vehicle</th>
+                        <th class="text-center">Client</th>
+                        <th class="text-center">Ultima modificació</th>
+                        <th style="width:20%">Accions</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                   
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
 
 
 
-<!--
-<h1>{{ dades_usuari.id }}</h1>
-<h1>{{ dades_usuari.nom }}</h1>
-<h1>TIPUS USUARI{{ dades_usuari.id_tipus_usuari }}</h1>
 
-<form action="{% url 'tanca_sessio' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Eliminar sesión</button>
-</form>
--->
+
+<script>
+    // Datos de ejemplo para la tabla
+
+    // Número de registros por página
+const TOTAL_REGISTRES_PAGINA = 20;
+const BTN_PAGINACIO = 4; // Número máximo de botones de página a mostrar
+
+$(document).ready(function() {
+    // Handler for .ready() called.
+    var reparacions_str = "{{ reparacions|safe }}";
+    var reparacions_str_f = reparacions_str.replace(/'/g, '"');
+    var data = JSON.parse(reparacions_str_f);
+    generatePagination(1, data);
+    displayData(1, data);
+
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2();
+    });
+
+    document.getElementById('b_elimina_filtres').addEventListener('click',f_eliminaFiltres);
+});
+
+function f_eliminaFiltres(){
+
+}
+
+// Función para mostrar los datos paginados
+function displayData(pageNum, data) {
+    var table = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+    table.innerHTML = '';
+    var start = (pageNum - 1) * TOTAL_REGISTRES_PAGINA;
+    var end = Math.min(start + TOTAL_REGISTRES_PAGINA, data.length);
+    for (var i = start; i < end; i++) {
+        var row = table.insertRow();
+        row.insertCell(0).innerHTML = data[i].data_alta;
+        row.insertCell(1).innerHTML = data[i].estat_reparacio;
+        row.insertCell(2).innerHTML = data[i].marca_model;
+        row.insertCell(3).innerHTML = data[i].nom + ' ' + data[i].cognoms + ' - ' + data[i].telefon;
+        row.insertCell(4).innerHTML = data[i].nom_usuari + ' (' + data[i].tipus_usuari + ')';
+        row.insertCell(5).innerHTML = '';
+        row.insertCell(6).innerHTML = ''; // Ajusta esto según tus necesidades
+    }
+}
+
+// Función para generar el paginador
+function generatePagination(currentPage, data) {
+    var pagination = document.getElementById('pagination');
+    pagination.innerHTML = '';
+    var pageCount = Math.ceil(data.length / TOTAL_REGISTRES_PAGINA);
+
+    var startPage = Math.max(currentPage - Math.floor(BTN_PAGINACIO / 2), 1);
+    var endPage = Math.min(startPage + BTN_PAGINACIO - 1, pageCount);
+    if (endPage - startPage < BTN_PAGINACIO - 1) {
+        startPage = Math.max(endPage - BTN_PAGINACIO + 1, 1);
+    }
+    if (startPage > 1) {
+        addNavigationButton('Prev', currentPage - 1, data);
+        addNavigationButton('<<', 1, data); // Botón para ir al principio
+    }
+    for (var i = startPage; i <= endPage; i++) {
+        addButton(i, currentPage, data);
+    }
+    if (endPage < pageCount) {
+        addNavigationButton('>>', pageCount, data); // Botón para ir al final
+        addNavigationButton('Següent', currentPage + 1, data);
+    }
+}
+
+// Función auxiliar para agregar botones de página al paginador
+function addButton(pageNum, currentPage, data) {
+    var button = document.createElement('button');
+    button.textContent = pageNum;
+    if (pageNum === currentPage) {
+        button.classList.add('active');
+    }
+    button.addEventListener('click', function(event) {
+        var pageNum = parseInt(event.target.textContent);
+        displayData(pageNum, data);
+        generatePagination(pageNum, data);
+    });
+    pagination.appendChild(button);
+}
+
+// Función auxiliar para agregar botones de navegación al paginador
+function addNavigationButton(label, pageNum, data) {
+    var button = document.createElement('button');
+    button.textContent = label;
+    button.addEventListener('click', function() {
+        displayData(pageNum, data);
+        generatePagination(pageNum, data);
+    });
+    pagination.appendChild(button);
+}
+</script>
+
+
 {% endblock %}

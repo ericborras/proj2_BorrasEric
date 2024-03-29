@@ -41,11 +41,18 @@ class DefinicioTipusLinia(models.Model):
 
 
 class EstatReparacio(models.Model):
+    id = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
 
     class Meta:
         managed = False
         db_table = 'estat_reparacio'
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'nom': self.nom  
+        }
 
 
 class Factura(models.Model):
