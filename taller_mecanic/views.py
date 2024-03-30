@@ -62,6 +62,23 @@ def filtrar_reparacions(request):
 
 
 def nova_reparacio(request):
-    estats_reparacio = utils.get_estats_reparacio()
+    vehicles = utils.get_vehicles()
+    definicio_tipus_linia = utils.get_definicio_tipus_linia()
+    packs = utils.get_packs()
+    return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicles':vehicles, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs})
 
-    return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari']})
+def get_client(request):
+    if request.method == 'POST':
+        id_vehicle = request.POST.get('id_vehicle')
+
+        return utils.get_client(id_vehicle)
+    
+    return render(request, 'index.html')
+
+def get_preu_pack(request):
+    if request.method == 'POST':
+        id_pack = request.POST.get('id_pack')
+
+        return utils.get_pack(id_pack)
+    
+    return render(request, 'index.html')

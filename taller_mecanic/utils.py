@@ -252,3 +252,100 @@ def filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricul
         data.append(row_dict)
 
     return JsonResponse({'success' : True, 'data': data})
+
+def get_vehicles():
+    query = """
+            SELECT * FROM vehicle
+            """
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        results = cursor.fetchall()
+    
+    data = []
+    #print("RESULTS: ",len(results))
+    for row in results:
+        # Crea una instancia de modelo Usuari con los datos de la fila obtenida
+        vehicle = models.Vehicle(*row)
+        data.append(vehicle)
+    return data
+
+def get_definicio_tipus_linia():
+    query = """
+            SELECT * FROM definicio_tipus_linia order by nom
+            """
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        results = cursor.fetchall()
+    
+    data = []
+    #print("RESULTS: ",len(results))
+    for row in results:
+        # Crea una instancia de modelo Usuari con los datos de la fila obtenida
+        dtl = models.DefinicioTipusLinia(*row)
+        data.append(dtl)
+    return data
+
+def get_client(id_vehicle):
+    #Montem la consulta
+    query = """
+        SELECT c.* 
+        FROM clients c LEFT JOIN vehicle v ON c.id = v.id_client
+        WHERE v.id = %s
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query, [id_vehicle])
+        row = cursor.fetchone()
+
+    if row:
+        
+        # Crea una instancia de modelo Usuari con los datos de la fila obtenida
+        client = models.Clients(*row)
+
+        #print("PRINT: ",usuari.to_json())
+        client_json = client.to_json()
+            
+        return JsonResponse({'success' : True, 'client': client_json})
+    else:
+        return JsonResponse({'success' : False})
+    
+
+def get_pack(id_pack):
+    #Montem la consulta
+    query = """
+        SELECT preu 
+        FROM packs_def
+        WHERE id = %s
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query, [id_pack])
+        row = cursor.fetchone()
+
+    if row:
+        
+        # Crea una instancia de modelo Usuari con los datos de la fila obtenida
+        preu = row[0]
+
+        return JsonResponse({'success' : True, 'preu': preu})
+    else:
+        return JsonResponse({'success' : False})
+    
+def get_packs():
+    query = """
+        SELECT * 
+        FROM packs_def
+        order by nom
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        results = cursor.fetchall()
+    
+    data = []
+    #print("RESULTS: ",len(results))
+    for row in results:
+        # Crea una instancia de modelo Usuari con los datos de la fila obtenida
+        packs = models.PacksDef(*row)
+        data.append(packs)
+    return data

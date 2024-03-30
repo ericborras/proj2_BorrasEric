@@ -9,6 +9,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class Clients(models.Model):
+    id = models.AutoField(primary_key=True)
     nif = models.CharField(unique=True, max_length=15)
     nom = models.CharField(max_length=150)
     cognoms = models.CharField(max_length=255)
@@ -21,6 +22,19 @@ class Clients(models.Model):
     class Meta:
         managed = False
         db_table = 'clients'
+    
+    def to_json(self):
+        return {
+            'id': self.id,
+            'nif': self.nif,
+            'nom': self.nom,
+            'cognoms': self.cognoms,
+            'telefon': self.telefon,
+            'email': self.email,
+            'direccio': self.direccio,
+            'ciutat': self.ciutat,
+            'codi_postal': self.codi_postal
+        }
 
 
 class Comptadors(models.Model):
@@ -33,6 +47,7 @@ class Comptadors(models.Model):
 
 
 class DefinicioTipusLinia(models.Model):
+    id = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=100)
 
     class Meta:
@@ -97,12 +112,20 @@ class MarcaModel(models.Model):
 
 
 class PacksDef(models.Model):
+    id = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     preu = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         managed = False
         db_table = 'packs_def'
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'nom': self.nom,
+            'preu': self.preu  
+        }
 
 
 class Reparacio(models.Model):
@@ -155,6 +178,7 @@ class Usuari(models.Model):
 
 
 class Vehicle(models.Model):
+    id = models.AutoField(primary_key=True)
     matricula = models.CharField(unique=True, max_length=15)
     kms = models.DecimalField(max_digits=10, decimal_places=2)
     id_client = models.ForeignKey(Clients, models.DO_NOTHING, db_column='id_client')

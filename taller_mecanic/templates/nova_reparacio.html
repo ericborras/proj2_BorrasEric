@@ -4,7 +4,465 @@
 
 {% block content %}
 {% include 'layouts/nav.html' %}
+<style>
+    .titled-border {
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+  
+    .title-container {
+        position: absolute;
+        top: -15px; /* Ajusta este valor según sea necesario */
+        background-color: white; /* Esto cubre la línea del borde detrás del título */
+        padding: 0 5px; /* Añade un pequeño relleno para el título */
+    }
 
-<h1>NOVA REPARACIÓ</h1>
+    .title {
+        font-weight: bold;
+    }
+
+    .b_elimina_filtre{
+        width: 45px;
+        height: 45px;
+        color: rgba(236, 169, 23, 0.918); 
+        background-color: #3f3e3d;border:0px;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+        
+    }
+
+    .b_elimina_filtre:hover{
+        background-color: rgba(236, 169, 23, 0.918); 
+        color: #3f3e3d;border:0px;
+    }
+
+    .b_elimina_filtre:disabled {
+        background-color: rgba(238, 204, 129, 0.918); 
+        color: #3f3e3d;border:0px; /* Color de texto más claro cuando está deshabilitado */
+        cursor: not-allowed; /* Cambia el cursor cuando está deshabilitado */
+    }
+
+    .error{
+        color: red;
+        font-size: 12px;
+    }
+    
+
+   
+</style>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<body>
+
+    <div style="margin-left:50px;">
+        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+        <div class="col-lg-5 col-xs-5"><h2><i class="fa-solid fa-plus"></i> Reparació </h2></div>
+        <div class="col-lg-6 col-xs-6">&nbsp;</div>
+    </div>
+    <div class="container">
+        <div class="row">
+        {% csrf_token %}
+          <!-- Columna con select y label -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label><i class="fa-solid fa-car"></i> Vehicle: </label>
+              <select class="js-example-basic-single" id="vehicle" style="width: 220px;">
+                <option value="-1"></option>
+                {% for v in vehicles %}
+                    <option value="{{ v.id }}">{{ v.matricula }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <!-- Columna con inputs en estructura enmarcada -->
+          <div class="col-md-6">
+            <div class="rounded-border">
+                <div class="row">
+                    <h3>&nbsp;&nbsp;<i class="fa-solid fa-user"></i> Client</h3>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                    <input type="text" class="form-control mb-2" id="client" disabled>
+                    </div>
+                    <div class="col-md-6">
+                    <input type="text" class="form-control mb-2" id="nif" disabled>
+                    </div>
+                </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <input type="text" class="form-control mb-2" id="telf" disabled>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control mb-2" id="email" disabled>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                    <input type="text" class="form-control mb-2" id="direccio" disabled>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" id="div_dtl_select">
+            <h5>Escull el tipus de feina a realitzar: </h5>
+            <select class="js-example-basic-single" id="definicio_tipus_linia" style="width: 220px;">
+                <option value="-1"></option>
+                {% for dtl in definicio_tipus_linia %}
+                    <option value="{{ dtl.id }}">{{ dtl.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Diferents tipus de linia -->
+        <div class="col-lg-12 col-xs-12">&nbsp;</div>
+
+        <div class="titled-border" id="d_ac">
+            <div class="title-container">
+              <div class="title">Altres conceptes</div>
+            </div>
+            <div class="container" style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-lg-1 col-xs-1">
+                        <label><span class="text-danger">*</span>Descripció:</label>
+                    </div>
+                    <div class="col-lg-4 col-xs-4" style="margin-left:10px;">
+                        <input type="text" class="form-control mb-2" id="desc_ac" />
+                    </div>
+                    <div class="col-lg-1 col-xs-1">
+                        <label>Quantitat:</label>
+                    </div>
+                    <div class="col-lg-1 col-xs-1">
+                        <input type="text" class="form-control mb-2" id="qt_ac" value="1" />
+                        <div id="ac_qt_error" class="error"></div>
+                    </div>
+                    
+                    <div class="col-lg-1 col-xs-1">
+                        <label>Preu:</label>
+                    </div>
+                    <div class="col-lg-2 col-xs-2">
+                        <input type="text" class="form-control mb-2" id="preu_ac" />
+                        <div id="ac_preu_error" class="error"></div>
+                    </div> 
+                    <div class="col-lg-1 col-xs-1">
+                        <button class="b_elimina_filtre" title="Crear reparació" id="add_ac" style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;" disabled>
+                            <i class="fa-solid fa-plus fa-xl"></i>
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="titled-border" id="d_p">
+            <div class="title-container">
+              <div class="title">Packs</div>
+            </div>
+            <div class="container" style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-lg-1 col-xs-1">
+                        <label><span class="text-danger">*</span>Pack:</label>
+                    </div>
+                    <div class="col-lg-5 col-xs-5">
+                        <select class="js-example-basic-single" id="packs" style="width: 320px;">
+                            <option value="-1"></option>
+                        {% for p in packs %}
+                            <option value="{{ p.id }}">{{ p.nom }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-lg-1 col-xs-1">
+                        <label>Preu:</label>
+                    </div>
+                    <div class="col-lg-2-col-xs-2">
+                        <input type="text" class="form-control mb-2" id="preu_p" disabled/>
+                    </div>
+                    <div class="col-lg-1 col-xs-1">&nbsp;</div>
+                    <div class="col-lg-1 col-xs-1">
+                        <button class="b_elimina_filtre" title="Crear reparació" id="add_p" style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;" disabled>
+                            <i class="fa-solid fa-plus fa-xl"></i>
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <br/>
+
+        <div class="titled-border" id="d_pr">
+            <div class="title-container">
+              <div class="title">Peces recanvi</div>
+            </div>
+            <div class="container" style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-lg-1 col-xs-1">
+                        <label><span class="text-danger">*</span>Peça:</label>
+                    </div>
+                    <div class="col-lg-4 col-xs-4">
+                        <input type="text" class="form-control mb-2" id="pesa_pr" />
+                    </div>
+                    <div class="col-lg-2 col-xs-2">
+                        <label><span class="text-danger">*</span>Codi fabricant:</label>
+                    </div>
+                    <div class="col-lg-2 col-xs-2">
+                        <input type="text" class="form-control mb-2" id="codfab_pr" />
+                    </div>
+                    <div class="col-lg-1 col-xs-1">
+                        <label>Quantitat:</label>
+                    </div>
+                    <div class="col-lg-1 col-xs-1">
+                        <input type="text" class="form-control mb-2" id="qt_pr" value="1"/>
+                    </div>
+                    <div class="col-lg-1 col-xs-1">&nbsp;</div>
+                    <div class="col-lg-1 col-xs-1">
+                        <label>Preu:</label>
+                    </div>
+                    <div class="col-lg-2 col-xs-2">
+                        <input type="text" class="form-control mb-2" id="preu_pr" />
+                    </div>
+                    <div class="col-lg-7 col-xs-7"></div>
+                    <div class="col-lg-1 col-xs-1">
+                        <button class="b_elimina_filtre" title="Crear reparació" id="add_pr" style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;" disabled>
+                            <i class="fa-solid fa-plus fa-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br/>
+        <div class="titled-border" id="d_fm">
+            <div class="title-container">
+              <div class="title">Feines mecànic</div>
+            </div>
+            <div class="container" style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-lg-1 col-xs-1">
+                        <label><span class="text-danger">*</span>Descripció:</label>
+                    </div>
+                    <div class="col-lg-4 col-xs-4" style="margin-left:10px;">
+                        <input type="text" class="form-control mb-2" id="desc_fm" />
+                    </div>
+                    <div class="col-lg-1 col-xs-1">
+                        <label>Quantitat:</label>
+                    </div>
+                    <div class="col-lg-1 col-xs-1">
+                        <input type="text" class="form-control mb-2" id="qt_fm" value="1"/>
+                    </div>
+                    
+                    <div class="col-lg-1 col-xs-1">
+                        <label>Preu:</label>
+                    </div>
+                    <div class="col-lg-2 col-xs-2">
+                        <input type="text" class="form-control mb-2" id="preu_fm" />
+                    </div> 
+                    <div class="col-lg-1 col-xs-1">
+                        <button class="b_elimina_filtre" title="Crear reparació" id="add_fm" style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;" disabled>
+                            <i class="fa-solid fa-plus fa-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+<script>
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+
+
+        f_altres_conceptes_escoltadors();
+
+        //Inicialment amagar els divs dels 4 tipus de linies
+        /*
+        document.getElementById('d_ac').style.display = "none";
+        document.getElementById('d_p').style.display = "none";
+        document.getElementById('d_pr').style.display = "none";
+        document.getElementById('d_fm').style.display = "none";
+        */
+        //Inicialment fins que no introdueixin client i vehicle no es pot afegir linies de reparació
+        //document.getElementById('div_dtl_select').style.display = "none";!!!!
+    });
+
+    function f_altres_conceptes_escoltadors(){
+        //Afegir escoltadors
+        document.getElementById('desc_ac').addEventListener('input', f_comprovaAltresConceptes);
+        document.getElementById('qt_ac').addEventListener('input', f_comprovaAltresConceptes);
+        document.getElementById('preu_ac').addEventListener('input', f_comprovaAltresConceptes);
+    }
+
+    function f_comprovaAltresConceptes(){
+        
+        /*
+            En el moment d'afegir altres conceptes:
+            Descripció: Obligatori
+            Quantitat: Opcional(Només numeros o be formats d'aquest estil "1.5") -> Validar validarPreusQuantitats
+            Preu: Opcional (Només numeros o be formats d'aquest estil "1.5") -> Validar validarPreusQuantitats
+        */
+        let desc = document.getElementById('desc_ac').value;
+        let qt = document.getElementById('qt_ac').value;
+        let preu = document.getElementById('preu_ac').value;
+
+        if(desc.length==0){
+            document.getElementById('add_ac').disabled = true;
+            f_validarPreu(preu,"ac_preu_error");
+            f_validarQuantitats(qt,"ac_qt_error");
+
+        }else{    
+            document.getElementById('add_ac').disabled = f_validarPreu(preu,"ac_preu_error") || f_validarQuantitats(qt,"ac_qt_error") || (desc.length > 0 ? false : true);
+        }
+        
+    }
+
+    function f_validarQuantitats(quantitat, id) {
+        //Validar 0.25 0.5 0.75 o be 1 1.0 
+        if(quantitat.length == 0){
+            document.getElementById(id).innerHTML = "";
+            return false;
+        }
+        const regex = /^\d+(\.(25|5|75|0))?$/;
+    
+        if (regex.test(quantitat)==false) {
+            document.getElementById(id).innerHTML = "Només permeten números enters o seguit de: .0, .25 o .75";
+            return true;
+        } else {
+            document.getElementById(id).innerHTML = "";
+            return false;
+        }
+        
+    }
+
+    function f_validarPreu(preu, id) {
+        if(preu.length == 0){
+            document.getElementById(id).innerHTML = "";
+            return false;
+        }
+        const regex = /^\d+(\.\d+)?$/;
+    
+        if (regex.test(preu)==false) {
+            console.info('DOCUMENT: '+id);
+            document.getElementById(id).innerHTML = "Només es permeten numeros amb la notació decimal amb '.'";
+            return true;
+        } else {
+            document.getElementById(id).innerHTML = "";
+            return false;
+        }
+    }
+    
+    var e_vehicle = $('#vehicle');
+    // Agregar un event listener para el evento change de Select2
+    e_vehicle.on('select2:select select2:unselect', function (e) {
+        // Obtener los elementos seleccionados
+        //var selectedOptions = select.val();
+        f_emplenarDadesClient(e_vehicle.val());
+        console.info(e_vehicle.val());
+        
+    });
+
+    var e_definicio_tipus_linia = $('#definicio_tipus_linia');
+    e_vehicle.on('select2:select select2:unselect', function (e) {
+        // Obtener los elementos seleccionados
+        //var selectedOptions = select.val();
+        console.info(e_definicio_tipus_linia.val()); 
+    });
+
+    var e_packs = $('#packs');
+    e_packs.on('select2:select select2:unselect', function (e) {
+        console.info('aa');
+        f_emplenarPreuPack(e_packs.val());
+    });
+
+    function f_emplenarPreuPack(id_pack){
+        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+        $.ajax({
+            type: 'POST',
+            url: '/get_preu_pack/',
+            data: {
+                'id_pack': id_pack,
+                'csrfmiddlewaretoken': csrfToken,
+            },
+            success: function(data) {
+                if (data.success) {
+                    //Retorn de JSON amb dades filtrades
+                    console.info(data)
+                    document.getElementById('preu_p').value = data.preu;
+                    
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Obtenir client",
+                        text: "S'ha produït un obtenint les dades del client",
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Obtenir client",
+                    text: "S'ha produït un obtenint les dades del client",
+                });
+            }
+        });
+    }
+
+
+
+    function f_emplenarDadesClient(id_vehicle){
+
+
+        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+        $.ajax({
+            type: 'POST',
+            url: '/get_client/',
+            data: {
+                'id_vehicle': id_vehicle,
+                'csrfmiddlewaretoken': csrfToken,
+            },
+            success: function(data) {
+                if (data.success) {
+                    //Retorn de JSON amb dades filtrades
+                    console.info(data)
+                    document.getElementById('client').value = data.client.nom + " " + data.client.cognoms;
+                    document.getElementById('nif').value = data.client.nif;
+                    document.getElementById('telf').value = data.client.telefon;
+                    document.getElementById('email').value = data.client.email;
+                    document.getElementById('direccio').value = data.client.direccio + " - " + data.client.ciutat + " ("+data.client.codi_postal+")"; 
+                    document.getElementById('div_dtl_select').style.display = "flex";
+                    
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Obtenir client",
+                        text: "S'ha produït un obtenint les dades del client",
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Obtenir client",
+                    text: "S'ha produït un obtenint les dades del client",
+                });
+            }
+        });
+
+
+    }
+
+
+    
+
+
+</script>
+
 
 {% endblock %}
