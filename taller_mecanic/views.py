@@ -65,7 +65,9 @@ def nova_reparacio(request):
     vehicles = utils.get_vehicles()
     definicio_tipus_linia = utils.get_definicio_tipus_linia()
     packs = utils.get_packs()
-    return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicles':vehicles, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs})
+    clients = utils.get_clients()
+
+    return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicles':vehicles, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'clients':clients})
 
 def get_client(request):
     if request.method == 'POST':
@@ -74,6 +76,7 @@ def get_client(request):
         return utils.get_client(id_vehicle)
     
     return render(request, 'index.html')
+
 
 def get_preu_pack(request):
     if request.method == 'POST':

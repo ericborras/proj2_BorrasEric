@@ -253,6 +253,7 @@ def filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricul
 
     return JsonResponse({'success' : True, 'data': data})
 
+#Retorna tots els vehicles
 def get_vehicles():
     query = """
             SELECT * FROM vehicle
@@ -309,7 +310,7 @@ def get_client(id_vehicle):
     else:
         return JsonResponse({'success' : False})
     
-
+#Retorna el preu del pack indicat per paràmetre
 def get_pack(id_pack):
     #Montem la consulta
     query = """
@@ -330,7 +331,8 @@ def get_pack(id_pack):
         return JsonResponse({'success' : True, 'preu': preu})
     else:
         return JsonResponse({'success' : False})
-    
+
+#Retorna tots els packs
 def get_packs():
     query = """
         SELECT * 
@@ -347,5 +349,24 @@ def get_packs():
     for row in results:
         # Crea una instancia de modelo Usuari con los datos de la fila obtenida
         packs = models.PacksDef(*row)
+        data.append(packs)
+    return data
+
+
+#Retorna tots els clients
+def get_clients():
+    query = """
+        SELECT * 
+        FROM clients
+        order by nom,cognoms
+    """
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        results = cursor.fetchall()
+    
+    data = []
+    for row in results:
+        # Crea una instancia de modelo Usuari con los datos de la fila obtenida
+        packs = models.Clients(*row)
         data.append(packs)
     return data
