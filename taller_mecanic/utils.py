@@ -552,3 +552,21 @@ def get_client_reparacio(id_reparacio):
         return row_dict
     else:
         return {}
+    
+
+def get_marca_models():
+    query = """
+        SELECT * 
+        FROM marca_model
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        results = cursor.fetchall()
+    
+    data = []
+    for row in results:
+        # Crea una instancia de modelo Usuari con los datos de la fila obtenida
+        packs = models.MarcaModel(*row)
+        data.append(packs)
+    return data

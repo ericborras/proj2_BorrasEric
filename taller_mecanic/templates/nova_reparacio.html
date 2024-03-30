@@ -60,11 +60,102 @@
     }
     
 
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+    
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+    
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
    
 </style>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <body>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-lg-11 col-xs-11">
+                    
+                    <h3><i class="fa-solid fa-plus"></i>&nbsp;<i class="fa-solid fa-car"></i> Afegir vehicle</h3>
+                </div>
+                <div class="col-lg-1 col-xs-1">
+                    <span style="text-align:right" class="close">&times;</span>
+                </div>
+                <div class="col-lg-12 col-xs-12">
+                    <hr/>
+                </div>
+                <div class="col-lg-12 col-xs-12">
+                    <div class="form-group">
+                        <label><span class="text-danger">*</span> Marca / Model: </label>
+                        <select class="js-example-basic-single" id="f_marca_model" style="width: 100%;">
+                            <option value="-1">Selecciona...</option>
+                            {% for mm in marca_models %}
+                                <option value="{{ mm.id }}">{{ mm.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xs-6">
+                    <label><span class="text-danger">*</span> Matrícula: </label>
+                    <input type="text" class="form-control mb-2" id="f_matricula">
+                </div>
+                <div class="col-lg-6 col-xs-6">
+                    <label><span class="text-danger">*</span> Kms: </label>
+                    <input type="text" class="form-control mb-2" id="f_kms">
+                </div>
+                <div class="col-lg-12 col-xs-12">
+                    <div class="form-group">
+                        <label><span class="text-danger">*</span> Client: </label>
+                        <select class="js-example-basic-single" id="f_client" style="width: 100%;">
+                            <option value="-1">Selecciona...</option>
+                            {% for c in clients %}
+                                <option value="{{ c.id }}">{{ c.nom }} {{ c.cognoms }}</option>
+                            {% endfor %}    
+                      </select>
+                    </div>
+                </div>
+                <div class="col-lg-11 col-xs-11">&nbsp;</div>
+                <div class="col-lg-1 col-xs-1" id="f_guarda_vehicle">
+                    <button class="b_elimina_filtre" title="Guardar vehicle" id="b_guarda_vehicle" disabled>
+                        <i class="fa-solid fa-floppy-disk fa-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+
 
     <div class="row">
         
@@ -85,6 +176,9 @@
                             <option value="{{ c.id }}">{{ c.nom }} {{ c.cognoms }}</option>
                         {% endfor %}
                     </select>
+                    <button class="b_elimina_filtre" style="visibility:hidden;">
+                        <i class="fa-solid fa-plus"></i>&nbsp;<i class="fa-solid fa-car"></i>
+                    </button>
                     </div>
                   </div>
             </div>
@@ -98,7 +192,10 @@
                                 <option value="{{ v.id }}">{{ v.matricula }} {{ v.nom }}</option>
                             {% endfor %}
                         </select>
-                        </div>
+                        <button class="b_elimina_filtre" title="Afegir vehicle" id="b_add_vehicle">
+                            <i class="fa-solid fa-plus"></i>&nbsp;<i class="fa-solid fa-car"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -182,10 +279,66 @@
     $(document).ready(function() {
         $('.js-example-basic-single').select2();
 
+        //Afegir escoltadors del modal
+        $('#f_marca_model').on('change', function() {
+            // Lógica que deseas ejecutar cuando cambia el valor seleccionado
+            f_comprovarAfegirVehicle();
+        });
+        document.getElementById('f_matricula').addEventListener('input', f_comprovarAfegirVehicle);
+        document.getElementById('f_kms').addEventListener('input', f_comprovarAfegirVehicle);
+        $('#f_client').on('change', function() {
+            // Lógica que deseas ejecutar cuando cambia el valor seleccionado
+            f_comprovarAfegirVehicle();
+        });
+
+
+        document.getElementById('b_guarda_vehicle').addEventListener('click',f_guardaVehicle);
         document.getElementById('b_guarda_reparacio_cap').addEventListener('click',f_guardarReparacionsCapçalera)
+    
     });
 
-   
+    function f_guardaVehicle(){
+        let kms = document.getElementById('f_kms').value;
+        let matricula = document.getElementById('f_matricula').value;
+        //f_marca_model.val() f_client.val()
+
+        //CRIDA AJAX PER GUARDAR EL VEHICLE
+
+
+    }
+
+    function f_comprovarAfegirVehicle(){
+        /*
+            Combos amb valor != -1
+            Matricula ha de tenir minim 7 caracters (Obl)
+            Km ha de ser un numero decimal correcte  (Obl)
+        */
+        let kms = document.getElementById('f_kms').value;
+        let matricula = document.getElementById('f_matricula').value;
+
+        //Validar kms
+        const regex = /^\d+(\.\d+)?$/;
+        let validar_km = regex.test(kms);
+        
+        //Validar matricula
+        let validar_matricula = (matricula.length >= 7 ? true : false);
+
+        //Validar combos
+        let validar_marca_model = (f_marca_model.val() !="-1" ? true : false);
+        let validar_client = (f_client.val() !="-1" ? true : false);
+
+        if(validar_km && validar_matricula && validar_client && validar_marca_model){ 
+            console.info('Tot ok');
+            document.getElementById('b_guarda_vehicle').disabled = false;
+        }else{
+            console.info('No ok');
+            document.getElementById('b_guarda_vehicle').disabled = true;
+        }
+
+    }
+
+    let f_marca_model = $('#f_marca_model');
+    let f_client = $('#f_client');
     var e_vehicle = $('#vehicle');
     // Agregar un event listener para el evento change de Select2
     e_vehicle.on('select2:select select2:unselect', function (e) {
@@ -459,6 +612,36 @@
                     });
                 }
             });
+        }
+    }
+
+    // Obtener el botón y el modal
+    var btn = document.getElementById("b_add_vehicle");
+    var modal = document.getElementById("myModal");
+
+    // Obtener el span que cierra el modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // Cuando se hace clic en el botón, abrir el modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+
+        //Revisar el valor del combo del client
+        //Si té valor, introduir com a seleccionat, en cas contrari, ha d'escollir
+        if(e_client.val()!="-1"){
+            $('#f_client').val(e_client.val()).trigger('change');
+        }
+    }
+
+    // Cuando se hace clic en <span> (x), cerrar el modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Cuando se hace clic fuera del modal, cerrar el modal
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
         }
     }
 </script>

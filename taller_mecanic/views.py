@@ -67,8 +67,9 @@ def nova_reparacio(request):
     definicio_tipus_linia = utils.get_definicio_tipus_linia()
     packs = utils.get_packs()
     clients = utils.get_clients()
+    marca_models = utils.get_marca_models()
 
-    return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicles':vehicles, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'clients':clients})
+    return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicles':vehicles, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'clients':clients, 'marca_models':marca_models})
 
 def get_client(request):
     if request.method == 'POST':

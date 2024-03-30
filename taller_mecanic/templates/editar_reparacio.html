@@ -308,7 +308,7 @@
 
     </div>
 
-    <div style="margin-left:50px;display:none">
+    <div style="margin-left:50px;" id="d_t_feines_reparacio">
         <h4><i class="fa-solid fa-wrench"></i> Feines de la reparació</h4>
     </div>
 </body>
@@ -316,13 +316,16 @@
 <script>
     let id_reparacio;
     $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+
+        document.getElementById('d_t_feines_reparacio').style.display = "none";
 
         f_altres_conceptes_escoltadors();
         f_peces_recanvi_escoltadors();
         f_feines_mecanic_escoltadors();
 
         //Inicialment amagar possibilitat afegir linies a la reparació
-        document.getElementById('div_dtl_select').style.display = "none";
+        //document.getElementById('div_dtl_select').style.display = "none";
 
         //Inicialment amagar els divs dels 4 tipus de linies
         document.getElementById('d_ac').style.display = "none";
@@ -524,6 +527,8 @@
     e_definicio_tipus_linia.on('select2:select select2:unselect', function (e) {
         // Obtener los elementos seleccionados
         //var selectedOptions = select.val();
+        
+        document.getElementById('d_t_feines_reparacio').style.display = "flex";
 
         if(e_definicio_tipus_linia.val()=="-1"){
             document.getElementById('d_ac').style.display = "none";
