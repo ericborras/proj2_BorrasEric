@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 # Create your views here.
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
-from . import utils
+from . import utils, models
 from django.core.paginator import Paginator
+import json
 
 def index(request):
     return render(request, 'index.html')
@@ -85,3 +86,49 @@ def get_preu_pack(request):
         return utils.get_pack(id_pack)
     
     return render(request, 'index.html')
+
+def get_dades_vehicle(request):
+    if request.method == 'POST':
+        id_client = request.POST.get('id_client')
+        return utils.get_dades_vehicle(id_client)
+
+    return render(request, 'index.html')
+
+def get_vehicle(request):
+    if request.method == 'POST':
+        id_vehicle = request.POST.get('id_vehicle')
+        return utils.get_vehicle(id_vehicle)
+    
+    return render(request, 'index.html')
+
+def get_vehicles(request):
+    if(request.method == 'POST'):
+        
+        vehicles = utils.get_vehicles()
+        vehicles_json = json.dumps([{
+            'id': vehicle.id,
+            'matricula': vehicle.matricula,
+            'kms': float(vehicle.kms),  # Convertir Decimal a float aquí
+            'nom': vehicle.id_marca_model.nom
+        } for vehicle in vehicles])
+        return JsonResponse({'success': True, 'vehicles': vehicles_json})
+    
+    return JsonResponse({'success' : False})
+
+
+def add_reparacio(request):
+    if(request.method == 'POST'):
+        id_vehicle = request.POST.get('id_vehicle')
+        return utils.add_reparacio(request, id_vehicle)
+    return render(request, 'index.html')
+
+
+def reparacio(request, id_reparacio):
+    vehicle = utils.get_vehicle_reparacio(id_reparacio)
+    definicio_tipus_linia = utils.get_definicio_tipus_linia()
+    packs = utils.get_packs()
+    client = utils.get_client_reparacio(id_reparacio)
+    #return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicles':vehicles, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'clients':clients})
+
+    reparacio = get_object_or_404(models.Reparacio, pk=id_reparacio)
+    return render(request, 'editar_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicle':vehicle, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'client':client, 'reparacio': reparacio})

@@ -129,6 +129,7 @@ class PacksDef(models.Model):
 
 
 class Reparacio(models.Model):
+    id = models.AutoField(primary_key=True)
     data_alta = models.DateField()
     id_estat_reparacio = models.ForeignKey(EstatReparacio, models.DO_NOTHING, db_column='id_estat_reparacio')
     id_usuari = models.ForeignKey('Usuari', models.DO_NOTHING, db_column='id_usuari')
@@ -187,3 +188,12 @@ class Vehicle(models.Model):
     class Meta:
         managed = False
         db_table = 'vehicle'
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'matricula': self.matricula,
+            'kms': self.kms,
+            'nom': self.id_marca_model.nom,
+            'id_client': self.id_client.id
+        }

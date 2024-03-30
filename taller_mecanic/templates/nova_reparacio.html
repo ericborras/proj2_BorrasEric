@@ -79,7 +79,7 @@
                 <div class="row">
                     <div class="form-group">
                       <label><i class="fa-solid fa-user"></i> Client: </label>
-                      <select class="js-example-basic-single" id="clients" style="width: 220px;">
+                      <select class="js-example-basic-single" id="clients" style="width: 320px;">
                         <option value="-1">Selecciona...</option>
                         {% for c in clients %}
                             <option value="{{ c.id }}">{{ c.nom }} {{ c.cognoms }}</option>
@@ -92,10 +92,10 @@
                 <div class="row">
                     <div class="form-group">
                         <label><i class="fa-solid fa-car"></i> Vehicle: </label>
-                        <select class="js-example-basic-single" id="vehicle" style="width: 220px;">
+                        <select class="js-example-basic-single" id="vehicle" style="width: 320px;">
                             <option value="-1">Selecciona...</option>
                             {% for v in vehicles %}
-                                <option value="{{ v.id }}">{{ v.matricula }}</option>
+                                <option value="{{ v.id }}">{{ v.matricula }} {{ v.nom }}</option>
                             {% endfor %}
                         </select>
                         </div>
@@ -167,408 +167,287 @@
           </div>
         </div>
 
-        <div class="row" id="div_dtl_select">
-            <h5>Escull el tipus de feina a realitzar: </h5>
-            <select class="js-example-basic-single" id="definicio_tipus_linia" style="width: 220px;">
-                <option value="-1">Selecciona...</option>
-                {% for dtl in definicio_tipus_linia %}
-                    <option value="{{ dtl.id }}">{{ dtl.nom }}</option>
-                {% endfor %}
-            </select>
+        <div class="row" id="guarda_reparacio_cap">
+            <button class="b_elimina_filtre" title="Guardar" id="b_guarda_reparacio_cap" disabled style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;">
+                <i class="fa-solid fa-floppy-disk fa-xl"></i>
+            </button>
         </div>
-
-        <!-- Diferents tipus de linia -->
-        <div class="col-lg-12 col-xs-12">&nbsp;</div>
-
-        <div class="titled-border" id="d_ac">
-            <div class="title-container">
-              <div class="title">Altres conceptes</div>
-            </div>
-            <div class="container" style="margin-top:10px;">
-                <div class="row">
-                    <div class="col-lg-1 col-xs-1">
-                        <label><span class="text-danger">*</span>Descripció:</label>
-                    </div>
-                    <div class="col-lg-4 col-xs-4" style="margin-left:10px;">
-                        <input type="text" class="form-control mb-2" id="desc_ac" />
-                    </div>
-                    <div class="col-lg-1 col-xs-1">
-                        <label>Quantitat:</label>
-                    </div>
-                    <div class="col-lg-1 col-xs-1">
-                        <input type="text" class="form-control mb-2" id="qt_ac" value="1" />
-                        <div id="ac_qt_error" class="error"></div>
-                    </div>
-                    
-                    <div class="col-lg-1 col-xs-1">
-                        <label>Preu:</label>
-                    </div>
-                    <div class="col-lg-2 col-xs-2">
-                        <input type="text" class="form-control mb-2" id="preu_ac" />
-                        <div id="ac_preu_error" class="error"></div>
-                    </div> 
-                    <div class="col-lg-1 col-xs-1">
-                        <button class="b_elimina_filtre" title="Crear reparació" id="add_ac" style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;" disabled>
-                            <i class="fa-solid fa-plus fa-xl"></i>
-                        </button>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-        
-        <div class="titled-border" id="d_p">
-            <div class="title-container">
-              <div class="title">Packs</div>
-            </div>
-            <div class="container" style="margin-top:10px;">
-                <div class="row">
-                    <div class="col-lg-1 col-xs-1">
-                        <label><span class="text-danger">*</span>Pack:</label>
-                    </div>
-                    <div class="col-lg-5 col-xs-5">
-                        <select class="js-example-basic-single" id="packs" style="width: 320px;">
-                            <option value="-1">Selecciona...</option>
-                        {% for p in packs %}
-                            <option value="{{ p.id }}">{{ p.nom }}</option>
-                        {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-lg-1 col-xs-1">
-                        <label>Preu:</label>
-                    </div>
-                    <div class="col-lg-2-col-xs-2">
-                        <input type="text" class="form-control mb-2" id="preu_p" disabled/>
-                    </div>
-                    <div class="col-lg-1 col-xs-1">&nbsp;</div>
-                    <div class="col-lg-1 col-xs-1">
-                        <button class="b_elimina_filtre" title="Crear reparació" id="add_p" style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;" disabled>
-                            <i class="fa-solid fa-plus fa-xl"></i>
-                        </button>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-        
-
-        <div class="titled-border" id="d_pr">
-            <div class="title-container">
-              <div class="title">Peces recanvi</div>
-            </div>
-            <div class="container" style="margin-top:10px;">
-                <div class="row">
-                    <div class="col-lg-1 col-xs-1">
-                        <label><span class="text-danger">*</span>Peça:</label>
-                    </div>
-                    <div class="col-lg-4 col-xs-4">
-                        <input type="text" class="form-control mb-2" id="pesa_pr" />
-                    </div>
-                    <div class="col-lg-2 col-xs-2">
-                        <label><span class="text-danger">*</span>Codi fabricant:</label>
-                    </div>
-                    <div class="col-lg-2 col-xs-2">
-                        <input type="text" class="form-control mb-2" id="codfab_pr" />
-                    </div>
-                    <div class="col-lg-1 col-xs-1">
-                        <label>Quantitat:</label>
-                    </div>
-                    <div class="col-lg-1 col-xs-1">
-                        <input type="text" class="form-control mb-2" id="qt_pr" value="1"/>
-                        <div id="pr_qt_error" class="error"></div>
-                    </div>
-                    <div class="col-lg-1 col-xs-1">&nbsp;</div>
-                    <div class="col-lg-1 col-xs-1">
-                        <label>Preu:</label>
-                    </div>
-                    <div class="col-lg-2 col-xs-2">
-                        <input type="text" class="form-control mb-2" id="preu_pr" />
-                        <div id="pr_preu_error" class="error"></div>
-                    </div>
-                    <div class="col-lg-7 col-xs-7"></div>
-                    <div class="col-lg-1 col-xs-1">
-                        <button class="b_elimina_filtre" title="Crear reparació" id="add_pr" style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;" disabled>
-                            <i class="fa-solid fa-plus fa-xl"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
-        <div class="titled-border" id="d_fm">
-            <div class="title-container">
-              <div class="title">Feines mecànic</div>
-            </div>
-            <div class="container" style="margin-top:10px;">
-                <div class="row">
-                    <div class="col-lg-1 col-xs-1">
-                        <label><span class="text-danger">*</span>Descripció:</label>
-                    </div>
-                    <div class="col-lg-4 col-xs-4" style="margin-left:10px;">
-                        <input type="text" class="form-control mb-2" id="desc_fm" />
-                    </div>
-                    <div class="col-lg-1 col-xs-1">
-                        <label>Quantitat:</label>
-                    </div>
-                    <div class="col-lg-1 col-xs-1">
-                        <input type="text" class="form-control mb-2" id="qt_fm" value="1"/>
-                        <div id="fm_qt_error" class="error"></div>
-                    </div>
-                    
-                    <div class="col-lg-1 col-xs-1">
-                        <label>Preu:</label>
-                    </div>
-                    <div class="col-lg-2 col-xs-2">
-                        <input type="text" class="form-control mb-2" id="preu_fm" />
-                        <div id="fm_preu_error" class="error"></div>
-                    </div> 
-                    <div class="col-lg-1 col-xs-1">
-                        <button class="b_elimina_filtre" title="Crear reparació" id="add_fm" style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;" disabled>
-                            <i class="fa-solid fa-plus fa-xl"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
 
     </div>
 
-    <div style="margin-left:50px;">
-        <h4><i class="fa-solid fa-wrench"></i> Feines de la reparació</h4>
-    </div>
 </body>
 
 <script>
+    let id_reparacio;
     $(document).ready(function() {
         $('.js-example-basic-single').select2();
 
-        f_altres_conceptes_escoltadors();
-        f_peces_recanvi_escoltadors();
-        f_feines_mecanic_escoltadors();
-
-        //Inicialment amagar els divs dels 4 tipus de linies
-        
-        document.getElementById('d_ac').style.display = "none";
-        document.getElementById('d_p').style.display = "none";
-        document.getElementById('d_pr').style.display = "none";
-        document.getElementById('d_fm').style.display = "none";
-        
-        //Inicialment fins que no introdueixin client i vehicle no es pot afegir linies de reparació
-        //document.getElementById('div_dtl_select').style.display = "none";!!!!
+        document.getElementById('b_guarda_reparacio_cap').addEventListener('click',f_guardarReparacionsCapçalera)
     });
 
-    function f_feines_mecanic_escoltadors(){
-        //Afegir escoltadors
-        document.getElementById('desc_fm').addEventListener('input', f_comprovarFeinesMecanic);
-        document.getElementById('qt_fm').addEventListener('input', f_comprovarFeinesMecanic);
-        document.getElementById('preu_fm').addEventListener('input', f_comprovarFeinesMecanic);
-    }
-
-    function f_comprovarFeinesMecanic(){
-        let desc = document.getElementById('desc_fm').value;
-        let qt = document.getElementById('qt_fm').value;
-        let preu = document.getElementById('preu_fm').value;
-
-        if(desc.length==0){
-            document.getElementById('add_fm').disabled = true;
-            f_validarPreu(preu,"fm_preu_error");
-            f_validarQuantitats(qt,"fm_qt_error");
-
-        }else{    
-            document.getElementById('add_fm').disabled = f_validarPreu(preu,"fm_preu_error") || f_validarQuantitats(qt,"fm_qt_error") || (desc.length > 0 ? false : true);
-        }
-    }
-
-    function f_altres_conceptes_escoltadors(){
-        //Afegir escoltadors
-        document.getElementById('desc_ac').addEventListener('input', f_comprovaAltresConceptes);
-        document.getElementById('qt_ac').addEventListener('input', f_comprovaAltresConceptes);
-        document.getElementById('preu_ac').addEventListener('input', f_comprovaAltresConceptes);
-    }
-
-    function f_peces_recanvi_escoltadors(){
-        document.getElementById('pesa_pr').addEventListener('input',f_comprovaRecanvi);
-        document.getElementById('codfab_pr').addEventListener('input',f_comprovaRecanvi);
-        document.getElementById('qt_pr').addEventListener('input',f_comprovaRecanvi);
-        document.getElementById('preu_pr').addEventListener('input',f_comprovaRecanvi);
-
-    }
-
-    function f_comprovaRecanvi(){
-        let pesa = document.getElementById('pesa_pr').value;
-        let codfab = document.getElementById('codfab_pr').value;
-        let qt = document.getElementById('qt_pr').value;
-        let preu = document.getElementById('preu_pr').value;
-
-        if(pesa.length==0 || codfab.length==0){
-            document.getElementById('add_pr').disabled = true;
-            f_validarPreu(preu,"pr_preu_error");
-            f_validarQuantitats(qt,"pr_qt_error");
-        }else{
-            document.getElementById('add_pr').disabled = f_validarPreu(preu,"pr_preu_error") || f_validarQuantitats(qt,"pr_qt_error") || (pesa.length > 0 ? false : true) || (codfab.length > 0 ? false : true);
-        }
-
-    }
-
-    function f_comprovaAltresConceptes(){
-        
-        /*
-            En el moment d'afegir altres conceptes:
-            Descripció: Obligatori
-            Quantitat: Opcional(Només numeros o be formats d'aquest estil "1.5") -> Validar validarPreusQuantitats
-            Preu: Opcional (Només numeros o be formats d'aquest estil "1.5") -> Validar validarPreusQuantitats
-        */
-        let desc = document.getElementById('desc_ac').value;
-        let qt = document.getElementById('qt_ac').value;
-        let preu = document.getElementById('preu_ac').value;
-
-        if(desc.length==0){
-            document.getElementById('add_ac').disabled = true;
-            f_validarPreu(preu,"ac_preu_error");
-            f_validarQuantitats(qt,"ac_qt_error");
-
-        }else{    
-            document.getElementById('add_ac').disabled = f_validarPreu(preu,"ac_preu_error") || f_validarQuantitats(qt,"ac_qt_error") || (desc.length > 0 ? false : true);
-        }
-        
-    }
-
-    function f_validarQuantitats(quantitat, id) {
-        //Validar 0.25 0.5 0.75 o be 1 1.0 
-        if(quantitat.length == 0){
-            document.getElementById(id).innerHTML = "";
-            return false;
-        }
-        const regex = /^\d+(\.(25|5|75|0))?$/;
-    
-        if (regex.test(quantitat)==false) {
-            document.getElementById(id).innerHTML = "Només permeten números enters o seguit de: .0, .25 o .75";
-            return true;
-        } else {
-            document.getElementById(id).innerHTML = "";
-            return false;
-        }
-        
-    }
-
-    function f_validarPreu(preu, id) {
-        if(preu.length == 0){
-            document.getElementById(id).innerHTML = "";
-            return false;
-        }
-        const regex = /^\d+(\.\d+)?$/;
-    
-        if (regex.test(preu)==false) {
-            console.info('DOCUMENT: '+id);
-            document.getElementById(id).innerHTML = "Només es permeten numeros amb la notació decimal amb '.'";
-            return true;
-        } else {
-            document.getElementById(id).innerHTML = "";
-            return false;
-        }
-    }
-    
+   
     var e_vehicle = $('#vehicle');
     // Agregar un event listener para el evento change de Select2
     e_vehicle.on('select2:select select2:unselect', function (e) {
         // Obtener los elementos seleccionados
         //var selectedOptions = select.val();
         f_emplenarDadesClient(e_vehicle.val());
-        console.info(e_vehicle.val());
+       
+        f_getVehicle(e_vehicle.val());
         
     });
 
-    var e_definicio_tipus_linia = $('#definicio_tipus_linia');
-    e_definicio_tipus_linia.on('select2:select select2:unselect', function (e) {
+    var e_client = $('#clients');
+    e_client.on('select2:select select2:unselect', function (e) {
         // Obtener los elementos seleccionados
         //var selectedOptions = select.val();
-
-        if(e_definicio_tipus_linia.val()=="-1"){
-            document.getElementById('d_ac').style.display = "none";
-            document.getElementById('d_p').style.display = "none";
-            document.getElementById('d_pr').style.display = "none";
-            document.getElementById('d_fm').style.display = "none";
-        }else{
-            switch(e_definicio_tipus_linia.val()){
-                case "1":
-                    //Feines mecànic
-                    document.getElementById('d_fm').style.display = "flex";
-
-                    document.getElementById('d_ac').style.display = "none";
-                    document.getElementById('d_p').style.display = "none";
-                    document.getElementById('d_pr').style.display = "none";
-                    break;
-                case "2":
-                    //Peces recanvi
-                    document.getElementById('d_pr').style.display = "flex";
-
-                    document.getElementById('d_ac').style.display = "none";
-                    document.getElementById('d_p').style.display = "none";
-                    document.getElementById('d_fm').style.display = "none";
-                    
-                    break;
-                case "3":
-                    //Packs
-                    document.getElementById('d_p').style.display = "flex";
-
-                    document.getElementById('d_ac').style.display = "none";
-                    document.getElementById('d_pr').style.display = "none";
-                    document.getElementById('d_fm').style.display = "none";
-
-                    break;
-                case "4":
-                    //Altres conceptes
-                    console.info('Altres conceptes');
-                    document.getElementById('d_ac').style.display = "flex";
-
-                    document.getElementById('d_p').style.display = "none";
-                    document.getElementById('d_pr').style.display = "none";
-                    document.getElementById('d_fm').style.display = "none";
-                    break;
-            }
-        }
-        console.info(e_definicio_tipus_linia.val()); 
-    });
-
-    var e_packs = $('#packs');
-    e_packs.on('select2:select select2:unselect', function (e) {
-        console.info('aa');
-        f_emplenarPreuPack(e_packs.val());
-        if(e_packs.val()==-1){
-            document.getElementById('add_p').disabled = true;
-        }else{
-            document.getElementById('add_p').disabled = false;
-        }
+        f_emplenarDadesVehicle(e_client.val());
+        f_emplenarDadesClient(e_client.val());
+        
         
     });
 
-    function f_emplenarPreuPack(id_pack){
 
-        if(id_pack==-1){
-            document.getElementById('preu_p').value = "";
+    function f_guardarReparacionsCapçalera(){
+        /*
+            Funció que guarda la capçalera de la reparació. Retorna el id de la capçalera que acabem de guardar
+            Deshabilita els <select> ya que ja hem guardat la reparació
+        */
+        console.info('VEHICLE A GUARDAR: '+ e_vehicle.val());
+        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/add_reparacio/',
+                data: {
+                    'id_vehicle': e_vehicle.val(),
+                    'csrfmiddlewaretoken': csrfToken,
+                },
+                success: function(data) {
+                    if (data.success) {
+                        
+                        id_reparacio = data.id_reparacio;
+                        /*
+                        Swal.fire({
+                            icon: "success",
+                            title: "Guardar reparació",
+                            text: "La reparació s'ha guardat correctament, ja pots afegir les feines a realitzar",
+                        });
+                        */
+                        Swal.fire({ 
+                            title: "Guardar reparació",
+                            text: "La reparació s'ha guardat correctament, ja pots afegir les feines a realitzar",
+                            icon: "success"}).then(okay => {
+                            if (okay) {           
+                                
+                                // Redireccionar a la página de detalles de la reparación
+                                window.location.href = data.url_reparacio;         
+                            }
+                        });
+
+                        //No deixar que canvii les dades
+                        $('#clients').prop('disabled', true);
+                        $('#vehicle').prop('disabled', true);
+
+
+                         
+
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Guardar reparació",
+                            text: "S'ha produït un error guardant la reparació",
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Guardar reparació",
+                        text: "S'ha produït un error guardant la reparació",
+                    });
+                }
+            });
+
+    }
+
+    
+    function f_getVehicle(id_vehicle){
+        if(id_vehicle=="-1"){
+            
         }else{
             var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
             $.ajax({
                 type: 'POST',
-                url: '/get_preu_pack/',
+                url: '/get_vehicle/',
                 data: {
-                    'id_pack': id_pack,
+                    'id_vehicle': id_vehicle,
+                    'csrfmiddlewaretoken': csrfToken,
+                },
+                success: function(data) {
+                    if (data.success) {
+                        
+                        document.getElementById('marca_model').value = data.vehicle.nom;
+                        document.getElementById('matricula').value = data.vehicle.matricula;
+                        document.getElementById('kms').value = data.vehicle.kms;
+
+                        $('#clients').val(data.vehicle.id_client).trigger('change');
+
+                        document.getElementById('b_guarda_reparacio_cap').disabled = false;
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Obtenir vehicle",
+                            text: "S'ha produït un obtenint les dades del vehicle",
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Obtenir vehicle",
+                        text: "S'ha produït un obtenint les dades del vehicle",
+                    });
+                }
+            });
+        }
+    }
+
+    function f_emplenarDadesVehicle(id_client){
+        
+        if(id_client=="-1"){
+            
+        }else{
+            console.info('else')
+            var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/get_dades_vehicle/',
+                data: {
+                    'id_client': id_client,
+                    'csrfmiddlewaretoken': csrfToken,
+                },
+                success: function(data) {
+                    if (data.success) {
+                        //Retorn de JSON amb dades filtrades
+                        console.info(data);
+                        let s_vehicles = document.getElementById('vehicle');
+                        s_vehicles.innerHTML = "";
+
+                        for(let i=0; i<data.vehicles.length; i++){
+                            var opt = document.createElement("option");
+                            
+                            opt.text = data.vehicles[i].matricula+" "+data.vehicles[i].nom;
+                            opt.value = data.vehicles[i].id; // Asignar un valor, si es necesario
+                            s_vehicles.add(opt);
+                        }
+                        document.getElementById('marca_model').value = data.vehicles[0].nom;
+                        document.getElementById('matricula').value = data.vehicles[0].matricula;
+                        document.getElementById('kms').value = data.vehicles[0].kms;
+
+                        document.getElementById('b_guarda_reparacio_cap').disabled = false;   
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Obtenir vehicles del client",
+                            text: "S'ha produït un obtenint els vehicles del client",
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Obtenir vehicles del client",
+                        text: "S'ha produït un obtenint els vehicles del client",
+                    });
+                }
+            });
+        }
+    }
+
+    function f_emplenarDadesClient(id_vehicle){
+
+        if(id_vehicle=="-1"){
+            //Esborrar tots els camps
+            document.getElementById('client').value = "";
+            document.getElementById('nif').value = "";
+            document.getElementById('telf').value = "";
+            document.getElementById('email').value = "";
+            document.getElementById('direccio').value = "";
+
+            document.getElementById('marca_model').value = "";
+            document.getElementById('kms').value = "";
+            document.getElementById('matricula').value = "";
+
+            //Mostra el combo dels vehicles ple
+            var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/get_vehicles/',
+                data: {
+                    'csrfmiddlewaretoken': csrfToken,
+                },
+                success: function(data) {
+                    if (data.success) {
+                        //Retorn de JSON amb dades filtrades
+                        
+                        let s_vehicles = document.getElementById('vehicle');
+                        s_vehicles.innerHTML = "";
+
+                        let json_obj = JSON.parse(data.vehicles);
+                        var opt = document.createElement("option");
+                        opt.text = "Selecciona...";
+                        opt.value = "-1";
+                        s_vehicles.add(opt);
+                        for(let i=0; i<json_obj.length; i++){
+                            var opt = document.createElement("option");
+
+                            opt.text = json_obj[i].matricula+" "+json_obj[i].nom;
+                            opt.value = json_obj[i].id;
+                            s_vehicles.add(opt);
+                        }
+                        document.getElementById('b_guarda_reparacio_cap').disabled = true;
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Obtenir vehicles",
+                            text: "S'ha produït un error obtenint les dades dels vehicles",
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Obtenir vehicles",
+                        text: "S'ha produït un error obtenint les dades dels vehicles",
+                    });
+                }
+            });
+            
+        }else{
+            var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/get_client/',
+                data: {
+                    'id_vehicle': id_vehicle,
                     'csrfmiddlewaretoken': csrfToken,
                 },
                 success: function(data) {
                     if (data.success) {
                         //Retorn de JSON amb dades filtrades
                         console.info(data)
-                        document.getElementById('preu_p').value = data.preu;
+                        document.getElementById('client').value = data.client.nom + " " + data.client.cognoms;
+                        document.getElementById('nif').value = data.client.nif;
+                        document.getElementById('telf').value = data.client.telefon;
+                        document.getElementById('email').value = data.client.email;
+                        document.getElementById('direccio').value = data.client.direccio + " - " + data.client.ciutat + " ("+data.client.codi_postal+")"; 
+                        //document.getElementById('div_dtl_select').style.display = "flex";
                         
                     } else {
                         Swal.fire({
                             icon: "error",
                             title: "Obtenir client",
-                            text: "S'ha produït un obtenint les dades del client",
+                            text: "S'ha produït un error obtenint les dades del client",
                         });
                     }
                 },
@@ -576,63 +455,12 @@
                     Swal.fire({
                         icon: "error",
                         title: "Obtenir client",
-                        text: "S'ha produït un obtenint les dades del client",
+                        text: "S'ha produït un error obtenint les dades del client",
                     });
                 }
             });
         }
-       
     }
-
-
-
-    function f_emplenarDadesClient(id_vehicle){
-
-
-        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
-        $.ajax({
-            type: 'POST',
-            url: '/get_client/',
-            data: {
-                'id_vehicle': id_vehicle,
-                'csrfmiddlewaretoken': csrfToken,
-            },
-            success: function(data) {
-                if (data.success) {
-                    //Retorn de JSON amb dades filtrades
-                    console.info(data)
-                    document.getElementById('client').value = data.client.nom + " " + data.client.cognoms;
-                    document.getElementById('nif').value = data.client.nif;
-                    document.getElementById('telf').value = data.client.telefon;
-                    document.getElementById('email').value = data.client.email;
-                    document.getElementById('direccio').value = data.client.direccio + " - " + data.client.ciutat + " ("+data.client.codi_postal+")"; 
-                    document.getElementById('div_dtl_select').style.display = "flex";
-                    
-                } else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Obtenir client",
-                        text: "S'ha produït un obtenint les dades del client",
-                    });
-                }
-            },
-            error: function() {
-                Swal.fire({
-                    icon: "error",
-                    title: "Obtenir client",
-                    text: "S'ha produït un obtenint les dades del client",
-                });
-            }
-        });
-
-
-    }
-
-
-    
-
-
 </script>
-
 
 {% endblock %}

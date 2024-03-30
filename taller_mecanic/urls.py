@@ -9,5 +9,10 @@ urlpatterns = [
     path('filtrar_reparacions/', views.filtrar_reparacions, name='filtrar_reparacions'),
     path('nova_reparacio', views.nova_reparacio, name="nova_reparacio"),
     path('get_client/', views.get_client, name="get_client"),
-    path('get_preu_pack/', views.get_preu_pack, name="get_preu_pack")
+    path('get_preu_pack/', views.get_preu_pack, name="get_preu_pack"),
+    path('get_dades_vehicle/', views.get_dades_vehicle, name="get_dades_vehicle"),
+    path('get_vehicle/', views.get_vehicle, name="get_vehicle"),
+    path('get_vehicles/', views.get_vehicles, name="get_vehicles"),
+    path('add_reparacio/', views.add_reparacio, name="add_reparacio"),
+    path('reparacio/<int:id_reparacio>/', views.reparacio, name='reparacio'),
 ]

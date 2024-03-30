@@ -324,8 +324,39 @@ function displayData(pageNum, data) {
         row.insertCell(2).innerHTML = '('+data[i].matricula+') '+ data[i].marca_model;
         row.insertCell(3).innerHTML = data[i].nom + ' ' + data[i].cognoms + ' - ' + data[i].telefon+' ('+data[i].ciutat+")";
         row.insertCell(4).innerHTML = data[i].nom_usuari + ' (' + data[i].tipus_usuari + ')';
-        row.insertCell(5).innerHTML = '';
+
+        console.info("URL_REPARACIÓ "+data[i].url_reparacio+" AAA: "+data[i].id)
+        //url_reparacio
+        let a = document.createElement('a');
+        a.href = data[i].url_reparacio;
+
+        // Crear el elemento <button> dinámicamente
+        var btn = document.createElement('button');
+
+        // Establecer las clases y el título del botón
+        btn.className = 'b_elimina_filtre';
+        btn.title = 'Obrir reparació';
+
+        // Crear el elemento <i> para el ícono del botón
+        var icon = document.createElement('i');
+        icon.className = 'fa-solid fa-wrench';
+
+        // Agregar el icono al botón
+        btn.appendChild(icon);
+
+        // Agregar el botón al enlace
+        a.appendChild(btn);
+
+        row.insertCell(5).appendChild(a);
         row.insertCell(6).innerHTML = ''; // Ajusta esto según tus necesidades
+
+        /*
+        <a href="">
+            <button class="b_elimina_filtre" title="Obrir reparació">
+                <i class="fa-solid fa-plus fa-xl"></i>
+            </button>
+        </a>
+        */
     }
 }
 
