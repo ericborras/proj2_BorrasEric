@@ -327,6 +327,11 @@ function f_guardaCanvisPecesRecanvi(id_linia_reparacio){
             }
         });
     }else{
+        console.info("0: "+id_linia_reparacio)
+        console.info("1: "+pesa_pr.length>0);
+        console.info("2: "+codfab_pr.length>0);
+        console.info("3: "+b_valida_preu);
+        console.info("4: "+b_valida_qt);
         Swal.fire({
             icon: "error",
             title: "Guardar canvis peça recanvi",

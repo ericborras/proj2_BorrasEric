@@ -153,7 +153,7 @@ def get_estats_reparacio():
         data.append(estat_reparacio)
     return data
 
-def filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricula, f_client, f_poblacio, f_pagada):
+def filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricula, f_client, f_poblacio, f_pagada, f_nif):
     if(request.session['dades_usuari']['id_tipus_usuari'] == 2):
         #Mecànic
         valores_lista = "0"
@@ -175,7 +175,7 @@ def filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricul
             WHEN LENGTH(mm.nom) > 50 THEN CONCAT(LEFT(mm.nom, 47), '...') 
             ELSE mm.nom 
             END AS marca_model,
-            c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat
+            c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat, c.nif
             FROM reparacio r LEFT JOIN estat_reparacio er ON r.id_estat_reparacio = er.id
                                 LEFT JOIN vehicle v ON r.id_vehicle = v.id
                                 LEFT JOIN marca_model mm ON v.id_marca_model = mm.id
@@ -188,6 +188,7 @@ def filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricul
                                         and ('' = UPPER(%s) OR UPPER(v.matricula) like %s)
                                         and ('' = UPPER(%s) OR UPPER(c.nom) like %s OR UPPER(c.cognoms) like %s)
                                         and ('' = UPPER(%s) OR UPPER(c.ciutat) like %s)
+                                        and ('' = UPPER(%s) OR UPPER(c.nif) like %s)
             ORDER BY r.data_alta DESC
             """
         
@@ -212,7 +213,7 @@ def filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricul
                 WHEN LENGTH(mm.nom) > 50 THEN CONCAT(LEFT(mm.nom, 47), '...') 
                 ELSE mm.nom 
                 END AS marca_model,
-                c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat
+                c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat, c.nif
                 FROM reparacio r LEFT JOIN estat_reparacio er ON r.id_estat_reparacio = er.id
                                     LEFT JOIN vehicle v ON r.id_vehicle = v.id
                                     LEFT JOIN marca_model mm ON v.id_marca_model = mm.id
@@ -225,6 +226,7 @@ def filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricul
                                             and ('' = UPPER(%s) OR UPPER(v.matricula) like %s)
                                             and ('' = UPPER(%s) OR UPPER(c.nom) like %s OR UPPER(c.cognoms) like %s)
                                             and ('' = UPPER(%s) OR UPPER(c.ciutat) like %s)
+                                            and ('' = UPPER(%s) OR UPPER(c.nif) like %s)
                 ORDER BY r.data_alta DESC
                 """
     else:
@@ -232,9 +234,9 @@ def filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricul
     
     with connection.cursor() as cursor:
         print("Consulta SQL con parámetros sustituidos:")
-        print(cursor.mogrify(query, [f_data_alta, f_data_alta,tupla_valores,tupla_valores, f_marca_model+'%', f_marca_model+'%', f_matricula+'%', f_matricula+'%', f_client+'%', f_client+'%', '%'+f_client+'%', '%'+f_poblacio+'%', '%'+f_poblacio+'%']))
+        print(cursor.mogrify(query, [f_data_alta, f_data_alta,tupla_valores,tupla_valores, f_marca_model+'%', f_marca_model+'%', f_matricula+'%', f_matricula+'%', f_client+'%', f_client+'%', '%'+f_client+'%', '%'+f_poblacio+'%', '%'+f_poblacio+'%', f_nif+'%', f_nif+'%']))
 
-        cursor.execute(query, [f_data_alta,f_data_alta,tupla_valores,tupla_valores, f_marca_model+'%', f_marca_model+'%', f_matricula+'%', f_matricula+'%', f_client+'%', f_client+'%', '%'+f_client+'%', '%'+f_poblacio+'%', '%'+f_poblacio+'%'])
+        cursor.execute(query, [f_data_alta,f_data_alta,tupla_valores,tupla_valores, f_marca_model+'%', f_marca_model+'%', f_matricula+'%', f_matricula+'%', f_client+'%', f_client+'%', '%'+f_client+'%', '%'+f_poblacio+'%', '%'+f_poblacio+'%', f_nif+'%', f_nif+'%'])
         results = cursor.fetchall()
 
     data = []
@@ -256,6 +258,7 @@ def filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricul
             "nom_usuari": row[12],
             "tipus_usuari": row[13],
             "ciutat": row[14],
+            "nif": row[15],
             "url_reparacio": reverse('reparacio', kwargs={'id_reparacio': row[0]})
         }
         data.append(row_dict)
@@ -752,7 +755,7 @@ def get_linies_reparacio(id_reparacio):
         results = cursor.fetchall()
 
     data = []
-    
+
     for row in results:
         row_dict = {
             "id": row[0],
@@ -760,7 +763,7 @@ def get_linies_reparacio(id_reparacio):
             "descripcio": row[2],
             "preu": row[3],
             "codi_fabricant": row[4],
-            "quantitat": row[5],
+            "quantitat": round(row[5], 1),
             "id_pack": row[6]
         }
         data.append(row_dict)

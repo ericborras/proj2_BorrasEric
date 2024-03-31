@@ -55,8 +55,9 @@ def filtrar_reparacions(request):
         f_client = request.POST.get('f_client')
         f_poblacio = request.POST.get('f_poblacio')
         f_pagada = request.POST.get('f_pagada')
+        f_nif = request.POST.get('f_nif')
 
-        return utils.filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricula, f_client, f_poblacio, f_pagada)
+        return utils.filtrar_reparacions(request, f_data_alta, f_estat, f_marca_model, f_matricula, f_client, f_poblacio, f_pagada, f_nif)
 
         
     return render(request, 'reparacions.html')

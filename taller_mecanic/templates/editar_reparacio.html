@@ -10,7 +10,7 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <body>
-    {{ linies_reparacio }}
+    
     <div class="row">
         
         <div class="col-lg-12 col-xs-12" style="margin-left:50px;margin-bottom:10px;"><h2><i class="fa-solid fa-wrench"></i> Reparació {{ reparacio.id }}</h2></div>
@@ -257,15 +257,191 @@
 
     <div class="container">
         <div style="padding-left:20px;padding-right:20px;padding-top:30px;margin-bottom:10px;" class="mi-elemento" id="feines_reparacio">
-        <!-- Generació dinàmica (en cas que hi hagin registres)
-        
-        % if conjunto %
-            % for elemento in conjunto %
-                elemento 
-            % endfor %
-        % endif %
+        <!-- Generació dinàmica-->
+        {% for lr in linies_reparacio %}
+            {% if lr.id_def == 1 %}
+            <div class="titled-border feines_mecanic" id="{{ lr.id }}-d_fm" >
+                <div class="title-container">
+                    <div class="title">Feines mecànic</div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-1 col-xs-1">
+                            <label><span class="text-danger">*</span>Descripció:</label>
+                        </div>
+                        <div class="col-lg-4 col-xs-4 ml-3" >
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-desc_fm" value="{{ lr.descripcio }}"/>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <label>Quantitat:</label>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-qt_fm" value="{{ lr.quantitat }}"/>
+                            <div id="{{ lr.id }}-fm_qt_error" class="error"></div>
+                        </div>
+                        
+                        <div class="col-lg-1 col-xs-1">
+                            <label>Preu:</label>
+                        </div>
+                        <div class="col-lg-2 col-xs-2">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_fm" value="{{ lr.preu }}" />
+                            <div id="{{ lr.id }}-fm_preu_error" class="error"></div>
+                        </div> 
+                        
+                        <div class="col-lg-1 col-xs-1">
+                            <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvis('{{ lr.id }}')">
+                                <i class="fa-solid fa-floppy-disk fa-xl"></i>
+                            </button>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <button class="b_elimina_filtre" title="Eliminar feina" id="elimina_feina-id" onclick="f_eliminaTipusFeina('{{ lr.id }}')">
+                                <i class="fa-solid fa-trash fa-xl"></i>
+                            </button>
+                        </div>
 
-        -->
+                    </div>
+                </div>
+            </div>
+            {% elif lr.id_def == 2 %}
+            <div class="titled-border feines_mecanic" id="{{ lr.id }}-d_pr">
+                <div class="title-container">
+                    <div class="title">Peces recanvi</div>
+                </div>
+                <div class="container" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-1 col-xs-1">
+                            <label><span class="text-danger">*</span>Peça:</label>
+                        </div>
+                        <div class="col-lg-4 col-xs-4">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-pesa_pr" value="{{ lr.descripcio }}" />
+                        </div>
+                        <div class="col-lg-2 col-xs-2">
+                            <label><span class="text-danger">*</span>Codi fabricant:</label>
+                        </div>
+                        <div class="col-lg-2 col-xs-2">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-codfab_pr" value="{{ lr.codi_fabricant }}"/>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <label>Quantitat:</label>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-qt_pr" value="{{ lr.quantitat }}"/>
+                            <div id="pr_qt_error" class="error"></div>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+                        <div class="col-lg-1 col-xs-1">
+                            <label>Preu:</label>
+                        </div>
+                        <div class="col-lg-2 col-xs-2">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_pr" value="{{ lr.preu }}"/>
+                            <div id="pr_preu_error" class="error"></div>
+                        </div>
+                        
+                        <div class="col-lg-7 col-xs-7">
+                            <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvisPecesRecanvi('{{ lr.id }}')">
+                                <i class="fa-solid fa-floppy-disk fa-xl"></i>
+                            </button>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <button class="b_elimina_filtre" title="Eliminar feina" id="elimina_feina-id" onclick="f_eliminaTipusFeina('{{ lr.id }}')">
+                                <i class="fa-solid fa-trash fa-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% elif lr.id_def == 3 %}
+
+            <div class="titled-border feines_mecanic" id="{{ lr.id }}-d_p">
+                <div class="title-container">
+                    <div class="title">Packs</div>
+                </div>
+                <div class="container" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-1 col-xs-1">
+                            <label><span class="text-danger">*</span>Pack:</label>
+                        </div>
+                        <div class="col-lg-5 col-xs-5">
+                            <select class="js-example-basic-single" id="{{ lr.id }}-packs" style="width: 320px;">
+                                <option value="-1">Selecciona...</option>
+                            {% for p in packs %}
+                                {% if lr.id_pack == p.id %}
+                                <option value="{{ p.id }}" selected>{{ p.nom }}</option>
+                                {% else %}
+                                <option value="{{ p.id }}">{{ p.nom }}</option>
+                                {% endif %}
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <label>Preu:</label>
+                        </div>
+                        <div class="col-lg-2-col-xs-2">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_p" value="{{ lr.preu }}" disabled/>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+                        <div class="col-lg-1 col-xs-1">
+                            <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvisPacks('{{ lr.id }}')">
+                                <i class="fa-solid fa-floppy-disk fa-xl"></i>
+                            </button>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <button class="b_elimina_filtre" title="Eliminar feina" id="elimina_feina-id" onclick="f_eliminaTipusFeina('{{ lr.id }}')">
+                                <i class="fa-solid fa-trash fa-xl"></i>
+                            </button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            {% elif lr.id_def == 4 %}
+
+            <div class="titled-border feines_mecanic" id="{{ lr.id }}-d_ac">
+                <div class="title-container">
+                    <div class="title">Altres conceptes</div>
+                </div>
+                <div class="container" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-1 col-xs-1">
+                            <label><span class="text-danger">*</span>Descripció:</label>
+                        </div>
+                        <div class="col-lg-4 col-xs-4" style="margin-left:10px;">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-desc_ac" value="{{ lr.descripcio }}"/>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <label>Quantitat:</label>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-qt_ac" value="{{ lr.quantitat }}" />
+                            <div id="ac_qt_error" class="error"></div>
+                        </div>
+                        
+                        <div class="col-lg-1 col-xs-1">
+                            <label>Preu:</label>
+                        </div>
+                        <div class="col-lg-2 col-xs-2">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_ac" value="{{ lr.preu }}"/>
+                            <div id="ac_preu_error" class="error"></div>
+                        </div> 
+                        <div class="col-lg-1 col-xs-1">
+                            <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvisAltresConceptes('{{ lr.id }}')">
+                                <i class="fa-solid fa-floppy-disk fa-xl"></i>
+                            </button>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <button class="b_elimina_filtre" title="Eliminar feina" id="elimina_feina-id" onclick="f_eliminaTipusFeina('{{ lr.id }}')">
+                                <i class="fa-solid fa-trash fa-xl"></i>
+                            </button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            {% endif %}
+        {% endfor %}
 
         </div>
     </div>

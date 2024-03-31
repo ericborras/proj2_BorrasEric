@@ -35,6 +35,7 @@
         document.getElementById('f_matricula').addEventListener('input',f_filtraReparacions);
         document.getElementById('f_client').addEventListener('input',f_filtraReparacions);
         document.getElementById('f_poblacio').addEventListener('input',f_filtraReparacions);
+        document.getElementById('f_nif').addEventListener('input',f_filtraReparacions);
         try{
             document.getElementById('f_pagada').addEventListener('change',f_filtraReparacions);
         }catch(e){};
@@ -53,6 +54,7 @@
         let f_matricula = document.getElementById('f_matricula').value;
         let f_client = document.getElementById('f_client').value;
         let f_poblacio = document.getElementById('f_poblacio').value;
+        let f_nif = document.getElementById('f_nif').value;
         let f_pagada = false; 
         try{
             f_pagada = document.getElementById('f_pagada').checked;
@@ -72,6 +74,7 @@
                 'f_client': f_client,
                 'f_poblacio': f_poblacio,
                 'f_pagada': f_pagada,
+                'f_nif': f_nif,
                 'csrfmiddlewaretoken': csrfToken,
             },
             success: function(data) {
@@ -106,6 +109,7 @@
         document.getElementById('f_client').value = "";
         document.getElementById('f_poblacio').value = "";
         document.getElementById('f_pagada').checked = false;
+        document.getElementById('f_nif').value = "";
     
         var select2Element = $('#f_estat');
         // Desseleccionar todas las opciones
@@ -128,7 +132,7 @@
             row.insertCell(0).innerHTML = data[i].data_alta;
             row.insertCell(1).innerHTML = data[i].estat_reparacio;
             row.insertCell(2).innerHTML = '('+data[i].matricula+') '+ data[i].marca_model;
-            row.insertCell(3).innerHTML = data[i].nom + ' ' + data[i].cognoms + ' - ' + data[i].telefon+' ('+data[i].ciutat+")";
+            row.insertCell(3).innerHTML = data[i].nom + ' ' + data[i].cognoms + ' (' + data[i].nif + ')' + ' - ' + data[i].telefon+' ('+data[i].ciutat+")";
             row.insertCell(4).innerHTML = data[i].nom_usuari + ' (' + data[i].tipus_usuari + ')';
     
             console.info("URL_REPARACIÓ "+data[i].url_reparacio+" AAA: "+data[i].id)
