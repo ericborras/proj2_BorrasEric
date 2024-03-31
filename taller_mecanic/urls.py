@@ -18,5 +18,11 @@ urlpatterns = [
     path('add_vehicle/', views.add_vehicle, name="add_vehicle"),
     path('add_feina_mecanic/', views.add_feina_mecanic, name="add_feina_mecanic"),
     path('editar_feina_mecanic/', views.editar_feina_mecanic, name="editar_feina_mecanic"),
-    path('eliminar_feina_mecanic/', views.eliminar_feina_mecanic, name="eliminar_feina_mecanic")
+    path('eliminar_feina_mecanic/', views.eliminar_feina_mecanic, name="eliminar_feina_mecanic"),
+    path('add_pesa_recanvi/', views.add_pesa_recanvi, name="add_pesa_recanvi"),
+    path('editar_pesa_recanvi/', views.editar_pesa_recanvi, name="editar_pesa_recanvi"),
+    path('add_altres_conceptes/', views.add_altres_conceptes, name="add_altres_conceptes"),
+    path('editar_altres_conceptes/', views.editar_altres_conceptes, name="editar_altres_conceptes"),
+    path('add_packs/', views.add_packs, name="add_packs"),
+    path('editar_packs/', views.editar_packs, name="editar_packs")
 ]

@@ -6,6 +6,7 @@ from . import models
 import bcrypt
 from datetime import datetime
 from django.urls import reverse
+import json
 
 
 #Funció que comprova si el hash i login de l'usuari existeix a la base de dades
@@ -634,5 +635,105 @@ def eliminar_feina_mecanic(request, id_linia_reparacio):
         cursor.execute("delete from linies_reparacio where id = %s", [id_linia_reparacio])
 
         return JsonResponse({'success':True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+def add_pesa_recanvi(request, id_reparacio, pesa, qt, codfab, preu):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("INSERT INTO linies_reparacio (id_reparacio, id_def, descripcio, quantitat, preu, codi_fabricant) VALUES (%s, 2, %s, %s, %s, %s)", [id_reparacio, pesa, qt, preu, codfab])
+
+        # Obtener el último ID insertado
+        id_pesa_recanvi = cursor.lastrowid
+
+        return JsonResponse({'success':True, 'id_pesa_recanvi':id_pesa_recanvi})
+    
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+def editar_pesa_recanvi(request, id_reparacio, id_linia_reparacio, pesa, qt, preu, codfab):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("update linies_reparacio set descripcio = %s, preu = %s, quantitat = %s, codi_fabricant = %s where id = %s", [pesa, preu, qt, codfab, id_linia_reparacio])
+
+        return JsonResponse({'success':True})
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+def add_altres_conceptes(request, id_reparacio, desc, qt, preu):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("INSERT INTO linies_reparacio (id_reparacio, id_def, descripcio, quantitat, preu) VALUES (%s, 4, %s, %s, %s)", [id_reparacio, desc, qt, preu])
+
+        # Obtener el último ID insertado
+        id_altres_conceptes = cursor.lastrowid
+
+        return JsonResponse({'success':True, 'id_altres_conceptes':id_altres_conceptes})
+    
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+def editar_altres_conceptes(request, id_reparacio, id_linia_reparacio, desc, qt, preu):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("update linies_reparacio set descripcio = %s, preu = %s, quantitat = %s where id = %s", [desc, preu, qt, id_linia_reparacio])
+
+        return JsonResponse({'success':True})
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+
+def get_packs_json():
+    query = """
+        SELECT * 
+        FROM packs_def
+        order by nom
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        results = cursor.fetchall()
+    
+    data = []
+    #print("RESULTS: ",len(results))
+    for row in results:
+        row_dict = {
+            "id": row[0],
+            "nom": row[1],
+            "preu": str(row[2]),
+        }
+        data.append(row_dict)
+    return json.dumps(data)
+
+
+def add_packs(request, id_reparacio, id_pack, preu, desc):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("INSERT INTO linies_reparacio (id_reparacio, id_def, descripcio, quantitat, preu, id_pack) VALUES (%s, 3, %s, 1, %s, %s)", [id_reparacio, desc, preu, id_pack])
+
+        # Obtener el último ID insertado
+        id_pack = cursor.lastrowid
+
+        return JsonResponse({'success':True, 'id_pack':id_pack})
+    
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+
+def editar_packs(request, id_reparacio, id_linia_reparacio, desc, id_pack, preu):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("update linies_reparacio set descripcio = %s, preu = %s, id_pack = %s where id = %s", [desc, preu, id_pack, id_linia_reparacio])
+
+        return JsonResponse({'success':True})
+
     except Exception as e:
         return JsonResponse({'success': False, 'msg': e})

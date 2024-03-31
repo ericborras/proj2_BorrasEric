@@ -321,97 +321,10 @@
     <div style="margin-bottom:20px;" class="container" id="d_t_feines_reparacio">
         <h4><i class="fa-solid fa-wrench"></i> Feines de la reparació</h4>
     </div>
-<!---->
+
     <div class="container">
         <div style="padding-left:20px;padding-right:20px;padding-top:30px;margin-bottom:10px;" class="mi-elemento" id="feines_reparacio">
-
-            <!--
-            <div class="titled-border feines_mecanic" id="id-d_fm" >
-                <div class="title-container">
-                  <div class="title">Feines mecànic</div>
-                </div>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-1 col-xs-1">
-                            <label><span class="text-danger">*</span>Descripció:</label>
-                        </div>
-                        <div class="col-lg-4 col-xs-4 ml-3" >
-                            <input type="text" class="form-control mb-2" id="id-desc_fm" />
-                        </div>
-                        <div class="col-lg-1 col-xs-1">
-                            <label>Quantitat:</label>
-                        </div>
-                        <div class="col-lg-1 col-xs-1">
-                            <input type="text" class="form-control mb-2" id="qt_fm" value="1"/>
-                            <div id="id-fm_qt_error" class="error"></div>
-                        </div>
-                        
-                        <div class="col-lg-1 col-xs-1">
-                            <label>Preu:</label>
-                        </div>
-                        <div class="col-lg-2 col-xs-2">
-                            <input type="text" class="form-control mb-2" id="preu_fm" />
-                            <div id="id-fm_preu_error" class="error"></div>
-                        </div> 
-                        
-                        <div class="col-lg-1 col-xs-1">
-                            <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvis(id)" disabled >
-                                <i class="fa-solid fa-floppy-disk fa-xl"></i>
-                            </button>
-                        </div>
-                        <div class="col-lg-1 col-xs-1">
-                            <button class="b_elimina_filtre" title="Eliminar feina" id="elimina_feina-id" onclick="f_eliminaTipusFeina(id)" disabled>
-                                <i class="fa-solid fa-trash fa-xl"></i>
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="titled-border feines_mecanic" id="d_pr">
-                <div class="title-container">
-                  <div class="title">Peces recanvi</div>
-                </div>
-                <div class="container" style="margin-top:10px;">
-                    <div class="row">
-                        <div class="col-lg-1 col-xs-1">
-                            <label><span class="text-danger">*</span>Peça:</label>
-                        </div>
-                        <div class="col-lg-4 col-xs-4">
-                            <input type="text" class="form-control mb-2" id="pesa_pr" />
-                        </div>
-                        <div class="col-lg-2 col-xs-2">
-                            <label><span class="text-danger">*</span>Codi fabricant:</label>
-                        </div>
-                        <div class="col-lg-2 col-xs-2">
-                            <input type="text" class="form-control mb-2" id="codfab_pr" />
-                        </div>
-                        <div class="col-lg-1 col-xs-1">
-                            <label>Quantitat:</label>
-                        </div>
-                        <div class="col-lg-1 col-xs-1">
-                            <input type="text" class="form-control mb-2" id="qt_pr" value="1"/>
-                            <div id="pr_qt_error" class="error"></div>
-                        </div>
-                        <div class="col-lg-1 col-xs-1">&nbsp;</div>
-                        <div class="col-lg-1 col-xs-1">
-                            <label>Preu:</label>
-                        </div>
-                        <div class="col-lg-2 col-xs-2">
-                            <input type="text" class="form-control mb-2" id="preu_pr" />
-                            <div id="pr_preu_error" class="error"></div>
-                        </div>
-                        <div class="col-lg-7 col-xs-7"></div>
-                        <div class="col-lg-1 col-xs-1">
-                            <button class="b_elimina_filtre" title="Crear reparació" id="add_pr" style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;" disabled>
-                                <i class="fa-solid fa-plus fa-xl"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+<!--
             <div class="titled-border feines_mecanic" id="d_p">
                 <div class="title-container">
                   <div class="title">Packs</div>
@@ -423,10 +336,7 @@
                         </div>
                         <div class="col-lg-5 col-xs-5">
                             <select class="js-example-basic-single" id="packs" style="width: 320px;">
-                                <option value="-1">Selecciona...</option>
-                            {% for p in packs %}
-                                <option value="{{ p.id }}">{{ p.nom }}</option>
-                            {% endfor %}
+                                
                             </select>
                         </div>
                         <div class="col-lg-1 col-xs-1">
@@ -445,46 +355,7 @@
                     </div>
                 </div>
             </div>
-
-            <div class="titled-border feines_mecanic" id="d_ac">
-                <div class="title-container">
-                  <div class="title">Altres conceptes</div>
-                </div>
-                <div class="container" style="margin-top:10px;">
-                    <div class="row">
-                        <div class="col-lg-1 col-xs-1">
-                            <label><span class="text-danger">*</span>Descripció:</label>
-                        </div>
-                        <div class="col-lg-4 col-xs-4" style="margin-left:10px;">
-                            <input type="text" class="form-control mb-2" id="desc_ac" />
-                        </div>
-                        <div class="col-lg-1 col-xs-1">
-                            <label>Quantitat:</label>
-                        </div>
-                        <div class="col-lg-1 col-xs-1">
-                            <input type="text" class="form-control mb-2" id="qt_ac" value="1" />
-                            <div id="ac_qt_error" class="error"></div>
-                        </div>
-                        
-                        <div class="col-lg-1 col-xs-1">
-                            <label>Preu:</label>
-                        </div>
-                        <div class="col-lg-2 col-xs-2">
-                            <input type="text" class="form-control mb-2" id="preu_ac" />
-                            <div id="ac_preu_error" class="error"></div>
-                        </div> 
-                        <div class="col-lg-1 col-xs-1">
-                            <button class="b_elimina_filtre" title="Crear reparació" id="add_ac" style="margin-left: 50px; margin-right: 50px;margin-bottom:20px;" disabled>
-                                <i class="fa-solid fa-plus fa-xl"></i>
-                            </button>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-
         -->
-            
         </div>
     </div>
     
@@ -516,7 +387,189 @@
         //document.getElementById('div_dtl_select').style.display = "none";!!!!
 
         document.getElementById('add_fm').addEventListener('click',f_afegeixFeinesMecanic);
+        document.getElementById('add_ac').addEventListener('click',f_afegeixAltresConceptes);
+        document.getElementById('add_pr').addEventListener('click',f_afegeixPecesRecanvi);
+        document.getElementById('add_p').addEventListener('click', f_afegeixPacks);
     });
+
+    function f_afegeixAltresConceptes(){
+        let id_reparacio = "{{ reparacio.id }}";
+        console.info('ID-REPARACIO: '+id_reparacio);
+        /*
+            1.Seleccionar els valors que s'han introduit 
+            2.Crida AJAX guardant el valor
+            3.Una vegada guardat, crear dinàmicament els valors introduïts(f_generaFeinesMecanic(id_linia_reparacio))
+        */
+
+        //1.
+        let desc_ac = document.getElementById('desc_ac').value;
+        let qt_ac = document.getElementById('qt_ac').value;
+        let preu_ac = document.getElementById('preu_ac').value;
+        
+
+        //2.
+        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+        $.ajax({
+            type: 'POST',
+            url: '/add_altres_conceptes/',
+            data: {
+                'id_reparacio': id_reparacio,
+                'desc': desc_ac,
+                'qt': qt_ac,
+                'preu': preu_ac,
+                'csrfmiddlewaretoken': csrfToken,
+            },
+            success: function(data) {
+                if (data.success) {
+                    
+                    id_altres_conceptes = data.id_altres_conceptes;
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Guardar altres conceptes",
+                        text: "Altres conceptes s'ha guardat correctament",
+                    });
+
+                    //Generar el codi dinàmicament
+                    f_generaAltresConceptes(id_altres_conceptes);
+
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Guardar altres conceptes",
+                        text: "S'ha produït un error guardant altres conceptes",
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Guardar altres conceptes",
+                    text: "S'ha produït un error guardant altres conceptes",
+                });
+            }
+        });
+    }
+
+
+    function f_afegeixPecesRecanvi(){
+        let id_reparacio = "{{ reparacio.id }}";
+        console.info('ID-REPARACIO: '+id_reparacio);
+        /*
+            1.Seleccionar els valors que s'han introduit 
+            2.Crida AJAX guardant el valor
+            3.Una vegada guardat, crear dinàmicament els valors introduïts(f_generaFeinesMecanic(id_linia_reparacio))
+        */
+
+        //1.
+        let pesa_pr = document.getElementById('pesa_pr').value;
+        let codfab_pr = document.getElementById('codfab_pr').value;
+        let preu_pr = document.getElementById('preu_pr').value;
+        let qt_pr = document.getElementById('preu_pr').value;
+
+        //2.
+        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+        $.ajax({
+            type: 'POST',
+            url: '/add_pesa_recanvi/',
+            data: {
+                'id_reparacio': id_reparacio,
+                'pesa': pesa_pr,
+                'qt': qt_pr,
+                'preu': preu_pr,
+                'codfab': codfab_pr,
+                'csrfmiddlewaretoken': csrfToken,
+            },
+            success: function(data) {
+                if (data.success) {
+                    
+                    id_pesa_recanvi = data.id_pesa_recanvi;
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Guardar peça recanvi",
+                        text: "La peça de recanvi s'ha guardat correctament",
+                    });
+
+                    //Generar el codi dinàmicament
+                    f_generaPecesRecanvi(id_pesa_recanvi);
+
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Guardar peça recanvi",
+                        text: "S'ha produït un error guardant la peça de recanvi",
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Guardar feina mecànic",
+                    text: "S'ha produït un error guardant la feina del mecànic",
+                });
+            }
+        });
+    }
+
+    function f_afegeixPacks(){
+        let id_reparacio = "{{ reparacio.id }}";
+        console.info('ID-REPARACIO: '+id_reparacio);
+        /*
+            1.Seleccionar els valors que s'han introduit 
+            2.Crida AJAX guardant el valor
+            3.Una vegada guardat, crear dinàmicament els valors introduïts(f_generaFeinesMecanic(id_linia_reparacio))
+        */
+
+        //1.
+        let pack_valor = $('#packs').val();
+        let pack_desc = $('#packs option:selected').text();
+        let pack_preu = document.getElementById('preu_p').value;
+        
+
+        //2.
+        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+        $.ajax({
+            type: 'POST',
+            url: '/add_packs/',
+            data: {
+                'id_reparacio': id_reparacio,
+                'id_pack': pack_valor,
+                'preu': pack_preu,
+                'desc': pack_desc,
+                'csrfmiddlewaretoken': csrfToken,
+            },
+            success: function(data) {
+                if (data.success) {
+                    
+                    id_pack = data.id_pack;
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Guardar pack",
+                        text: "El pack s'ha guardat correctament",
+                    });
+
+                    //Generar el codi dinàmicament
+                    f_generaPacks(id_pack);
+
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Guardar pack",
+                        text: "S'ha produït un error guardant el pack",
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Guardar pack",
+                    text: "S'ha produït un error guardant el pack",
+                });
+            }
+        });
+    }
 
     function f_afegeixFeinesMecanic(){
         let id_reparacio = "{{ reparacio.id }}";
@@ -558,10 +611,6 @@
                     //Generar el codi dinàmicament
                     f_generaFeinesMecanic(id_linia_reparacio);
 
-                    
-                    
-                     
-
                 } else {
                     Swal.fire({
                         icon: "error",
@@ -582,13 +631,559 @@
 
     }
 
+    function f_guardaCanvisPecesRecanvi(id_linia_reparacio){
+        
+
+        let id_reparacio = "{{ reparacio.id }}";
+
+        let pesa_pr = document.getElementById(id_linia_reparacio+'-pesa_pr').value;
+        let codfab_pr = document.getElementById(id_linia_reparacio+'-codfab_pr').value;
+        let preu_pr = document.getElementById(id_linia_reparacio+'-preu_pr').value;
+        let qt_pr = document.getElementById(id_linia_reparacio+'-qt_pr').value;
+
+        const valida_preu = /^\d+(\.\d+)?$/;
+        const valida_qt = /^\d+(\.(25|5|75|0))?$/;
+        let b_valida_preu = true;
+        let b_valida_qt = true;
+
+        if(preu_pr.length!=0){
+            b_valida_preu = valida_preu.test(preu_pr);
+        }
+        if(qt_pr.length!=0){
+            b_valida_qt = valida_qt.test(qt_pr);
+        }
+
+
+        if(pesa_pr.length>0 && codfab_pr.length>0 && b_valida_preu && b_valida_qt){
+            var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/editar_pesa_recanvi/',
+                data: {
+                    'id_reparacio': id_reparacio,
+                    'id_linia_reparacio': id_linia_reparacio,
+                    'codfab': codfab_pr,
+                    'pesa': pesa_pr,
+                    'qt': qt_pr,
+                    'preu': preu_pr,
+                    'csrfmiddlewaretoken': csrfToken,
+                },
+                success: function(data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Guardar canvis peça recanvi",
+                            text: "Els canvis s'han guardat correctament",
+                        });
+    
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Guardar canvis peça recanvi",
+                            text: "S'ha produït un error guardant els canvis de peça recanvi",
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Guardar canvis peça recanvi",
+                        text: "S'ha produït un error guardant els canvis de peça recanvi",
+                    });
+                }
+            });
+        }else{
+            Swal.fire({
+                icon: "error",
+                title: "Guardar canvis peça recanvi",
+                text: "S'ha produït un error de validació dels camps a modificar. La peça i el codi de fabricant són camps obligatori. El preu ha de ser un número vàlid",
+            });
+        }
+    }
+
+
+    function f_guardaCanvisAltresConceptes(id_linia_reparacio){
+        let id_reparacio = "{{ reparacio.id }}";
+
+        let desc_ac = document.getElementById(id_linia_reparacio+'-desc_ac').value;
+        let preu_ac = document.getElementById(id_linia_reparacio+'-preu_ac').value;
+        let qt_ac = document.getElementById(id_linia_reparacio+'-qt_ac').value;
+        const valida_preu = /^\d+(\.\d+)?$/;
+        const valida_qt = /^\d+(\.(25|5|75|0))?$/;
+        let b_valida_preu = true;
+        let b_valida_qt = true;
+
+        if(preu_pr.length!=0){
+            b_valida_preu = valida_preu.test(preu_ac);
+        }
+        if(qt_pr.length!=0){
+            b_valida_qt = valida_qt.test(qt_ac);
+        }
+
+
+        if(desc_ac.length>0 && b_valida_preu && b_valida_qt){
+            var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/editar_altres_conceptes/',
+                data: {
+                    'id_reparacio': id_reparacio,
+                    'id_linia_reparacio': id_linia_reparacio,
+                    'desc': desc_ac,
+                    'qt': qt_ac,
+                    'preu': preu_ac,
+                    'csrfmiddlewaretoken': csrfToken,
+                },
+                success: function(data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Guardar canvis altres conceptes",
+                            text: "Els canvis s'han guardat correctament",
+                        });
+    
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Guardar canvis altres conceptes",
+                            text: "S'ha produït un error guardant els canvis d'altres conceptes",
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Guardar canvis altres conceptes",
+                        text: "S'ha produït un error guardant els canvis d'altres conceptes",
+                    });
+                }
+            });
+        }else{
+            Swal.fire({
+                icon: "error",
+                title: "Guardar canvis altres conceptes",
+                text: "S'ha produït un error de validació dels camps a modificar. La descripció és obligatòria. El preu ha de ser un número vàlid",
+            });
+        }
+
+    }
+
+    function f_guardaCanvisPacks(id_linia_reparacio){
+        let id_reparacio = "{{ reparacio.id }}";
+
+        let id_pack = $('#'+id_linia_reparacio+'-packs').val();
+        let desc_pack = $('#'+id_linia_reparacio+'-packs option:selected').text();
+        let preu_pack = document.getElementById(id_linia_reparacio+'-preu_p').value;
+
+        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+        $.ajax({
+            type: 'POST',
+            url: '/editar_packs/',
+            data: {
+                'id_reparacio': id_reparacio,
+                'id_linia_reparacio': id_linia_reparacio,
+                'desc': desc_pack,
+                'id_pack': id_pack,
+                'preu': preu_pack,
+                'csrfmiddlewaretoken': csrfToken,
+            },
+            success: function(data) {
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Guardar canvis packs",
+                        text: "Els canvis s'han guardat correctament",
+                    });
+
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Guardar canvis packs",
+                        text: "S'ha produït un error guardant els canvis del pack",
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Guardar canvis packs",
+                    text: "S'ha produït un error guardant els canvis del pack",
+                });
+            }
+        });
+        
+    }
+
+    $(document).on('change', '.js-example-basic-single', function() {
+        // Obtiene el valor seleccionado
+        var selectedValue = $(this).val();
+        // Obtiene el texto seleccionado
+        var selectedText = $(this).find('option:selected').text();
+        var selectId = $(this).attr('id');
+       
+
+        var indiceGuion = selectId.indexOf('-');
+
+        let s_f;
+        // Verifica si se encontró un guion
+        if (indiceGuion !== -1) {
+            // Retorna la subcadena desde el inicio hasta la posición del guion
+            s_f = selectId.substring(0, indiceGuion);
+        }
+
+        if(selectId!="definicio_tipus_linia" && selectId!="packs"){
+            var packs_json = JSON.parse('{{ packs_json|escapejs }}');
+            for(let i=0; i<packs_json.length; i++){
+                if(selectedValue == packs_json[i].id){
+                    console.info("proceder: "+s_f+'-preu_p');
+                    document.getElementById(s_f+'-preu_p').value = packs_json[i].preu;
+                    break;
+                }
+            }
+        }
+        
+        
+        
+
+        // Aquí puedes realizar las acciones que deseas con el valor y el texto seleccionado
+        console.log('Valor seleccionado:', selectedValue);
+        console.log('Texto seleccionado:', selectedText);
+    });
+
+
+    function f_generaPacks(id_p) {
+        // Div principal
+        var divPrincipal = document.createElement('div');
+        divPrincipal.classList.add('titled-border', 'feines_mecanic');
+        divPrincipal.id = id_p + '-d_p';
+    
+        // Container del título
+        var divTitleContainer = document.createElement('div');
+        divTitleContainer.classList.add('title-container');
+        var divTitle = document.createElement('div');
+        divTitle.classList.add('title');
+        divTitle.textContent = 'Packs';
+        divTitleContainer.appendChild(divTitle);
+        divPrincipal.appendChild(divTitleContainer);
+    
+        // Container
+        var divContainer = document.createElement('div');
+        divContainer.classList.add('container');
+        divContainer.style.marginTop = '10px';
+        var divRow = document.createElement('div');
+        divRow.classList.add('row');
+    
+        // Elementos del formulario
+        var elementos = [
+            { label: 'Pack:', id: id_p + '-packs', col: 'col-lg-5 col-xs-5', select: true },
+            { label: 'Preu:', id: id_p + '-preu_p', col: 'col-lg-2 col-xs-2', input: true, disabled: true }
+        ];
+        
+        let preu_pack;
+        elementos.forEach(function(elemento) {
+            var divCol = document.createElement('div');
+            divCol.classList.add('col-lg-1', 'col-xs-1');
+            var label = document.createElement('label');
+            label.innerHTML = (elemento.label.includes('text-danger')) ? elemento.label : elemento.label + '<span class="text-danger">*</span>';
+            divCol.appendChild(label);
+    
+            var divInputCol = document.createElement('div');
+            divInputCol.className = elemento.col;
+    
+            if (elemento.select) {
+                var select = document.createElement('select');
+                select.classList.add('js-example-basic-single');
+                select.id = elemento.id;
+                select.style.width = '320px';
+
+                
+                var packs_json = JSON.parse('{{ packs_json|escapejs }}');
+                console.info(packs_json);
+
+                for(let i=0; i<packs_json.length; i++){
+                    let option = document.createElement("option");
+                    option.value = packs_json[i].id;
+                    option.textContent = packs_json[i].nom;
+                    select.appendChild(option);
+                }
+            
+                divInputCol.appendChild(select);
+                $(select).select2();
+                $(select).val($('#packs').val()).trigger('change');
+                  
+            }
+    
+            if (elemento.input) {
+                var input = document.createElement('input');
+                input.type = 'text';
+                input.classList.add('form-control', 'mb-2');
+                input.id = elemento.id;
+                input.value = document.getElementById('preu_p').value;
+                if (elemento.disabled) {
+                    input.disabled = true;
+                }
+                divInputCol.appendChild(input);
+            }
+    
+            divRow.appendChild(divCol);
+            divRow.appendChild(divInputCol);
+        });
+    
+        //Buttons
+        var botones = [
+            { id: id_p + '-guarda_canvis', onclick: 'f_guardaCanvisPacks(' + id_p + ')', icono: 'fa-floppy-disk', param: id_p },
+            { id: id_p + '-elimina_feina', onclick: 'f_eliminaTipusFeina(' + id_p + ')', icono: 'fa-trash', param: id_p }
+        ];
+    
+        botones.forEach(function(boton) {
+            var divCol = document.createElement('div');
+            if(boton.icono=='fa-floppy-disk'){
+                divCol.classList.add('col-lg-11', 'col-xs-11');
+            }else{
+                divCol.classList.add('col-lg-1', 'col-xs-1');
+            }
+            
+            var button = document.createElement('button');
+            button.classList.add('b_elimina_filtre');
+            button.title = (boton.id.includes('guarda_canvis')) ? 'Guardar canvis' : 'Eliminar feina';
+            button.id = boton.id;
+
+            //Escoltadors dels buttons
+            button.addEventListener('click', function() {
+                if (boton.id.includes('guarda_canvis')) {
+                    f_guardaCanvisPacks(boton.param);
+                } else {
+                    f_eliminaTipusFeina(boton.param);
+                }
+            });
+
+            var icon = document.createElement('i');
+            icon.classList.add('fa-solid', boton.icono, 'fa-xl');
+            button.appendChild(icon);
+            divCol.appendChild(button);
+            divRow.appendChild(divCol);
+        });
+        divContainer.appendChild(divRow);
+        divPrincipal.appendChild(divContainer);
+    
+        var d_feines_reparacio = document.getElementById("feines_reparacio");
+        d_feines_reparacio.appendChild(divPrincipal);
+    
+
+
+    }
+
+    function f_generaAltresConceptes(id_ac) {
+        // Div principal
+        var divPrincipal = document.createElement('div');
+        divPrincipal.classList.add('titled-border', 'feines_mecanic');
+        divPrincipal.id = id_ac + '-d_ac';
+    
+        // Container del titol
+        var divTitleContainer = document.createElement('div');
+        divTitleContainer.classList.add('title-container');
+        var divTitle = document.createElement('div');
+        divTitle.classList.add('title');
+        divTitle.textContent = 'Altres conceptes';
+        divTitleContainer.appendChild(divTitle);
+        divPrincipal.appendChild(divTitleContainer);
+    
+        // Container
+        var divContainer = document.createElement('div');
+        divContainer.classList.add('container');
+        divContainer.style.marginTop = '10px';
+        var divRow = document.createElement('div');
+        divRow.classList.add('row');
+    
+        // Elements del formulari
+        var elementos = [
+            { label: 'Descripció:', id: id_ac + '-desc_ac', col: 'col-lg-4 col-xs-4', valor: document.getElementById('desc_ac').value },
+            { label: 'Quantitat:', id: id_ac + '-qt_ac', col: 'col-lg-1 col-xs-1', valor: '1', errorId: 'ac_qt_error', valor: document.getElementById('qt_ac').value },
+            { label: 'Preu:', id: id_ac + '-preu_ac', col: 'col-lg-2 col-xs-2', errorId: id_ac + '-ac_preu_error', valor: document.getElementById('preu_ac').value }
+        ];
+    
+        elementos.forEach(function(elemento) {
+            var divCol = document.createElement('div');
+            divCol.classList.add('col-lg-1', 'col-xs-1');
+            var label = document.createElement('label');
+            label.innerHTML = (elemento.label.includes('text-danger')) ? elemento.label : elemento.label + '<span class="text-danger">*</span>';
+            divCol.appendChild(label);
+    
+            var divInputCol = document.createElement('div');
+            divInputCol.className = elemento.col;
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.classList.add('form-control', 'mb-2');
+            input.id = elemento.id;
+            if (elemento.valor) {
+                input.value = elemento.valor;
+            }
+    
+            input.addEventListener('input', function() {
+                console.log('Id: ' + elemento.id + " Error: id: " + elemento.errorId);
+            });
+    
+            divInputCol.appendChild(input);
+            divRow.appendChild(divCol);
+            divRow.appendChild(divInputCol);
+        });
+    
+        //Buttons
+        var botones = [
+            { id: id_ac + '-guarda_canvis', onclick: 'f_guardaCanvisPecesRecanvi(' + id_ac + ')', icono: 'fa-floppy-disk', param: id_ac },
+            { id: id_ac + '-elimina_feina', onclick: 'f_eliminaTipusFeina(' + id_ac + ')', icono: 'fa-trash', param: id_ac }
+        ];
+    
+        botones.forEach(function(boton) {
+            var divCol = document.createElement('div');
+            if(boton.icono=='fa-floppy-disk'){
+                divCol.classList.add('col-lg-11', 'col-xs-11');
+            }else{
+                divCol.classList.add('col-lg-1', 'col-xs-1');
+            }
+            
+            var button = document.createElement('button');
+            button.classList.add('b_elimina_filtre');
+            button.title = (boton.id.includes('guarda_canvis')) ? 'Guardar canvis' : 'Eliminar feina';
+            button.id = boton.id;
+
+            //Escoltadors dels buttons
+            button.addEventListener('click', function() {
+                if (boton.id.includes('guarda_canvis')) {
+                    f_guardaCanvisAltresConceptes(boton.param);
+                } else {
+                    f_eliminaTipusFeina(boton.param);
+                }
+            });
+
+            var icon = document.createElement('i');
+            icon.classList.add('fa-solid', boton.icono, 'fa-xl');
+            button.appendChild(icon);
+            divCol.appendChild(button);
+            divRow.appendChild(divCol);
+        });
+        divContainer.appendChild(divRow);
+        divPrincipal.appendChild(divContainer);
+    
+        var d_feines_reparacio = document.getElementById("feines_reparacio");
+        d_feines_reparacio.appendChild(divPrincipal);
+    
+        //Netejar camps de text
+        document.getElementById('desc_ac').value = "";
+        document.getElementById('qt_ac').value = "1";
+        document.getElementById('preu_ac').value = "";
+    }
+
+    function f_generaPecesRecanvi(id_pesa_recanvi){
+        // Div principal
+        var divPrincipal = document.createElement('div');
+        divPrincipal.classList.add('titled-border', 'feines_mecanic');
+        divPrincipal.id = id_pesa_recanvi+'-d_pr';
+
+        // Container del titol
+        var divTitleContainer = document.createElement('div');
+        divTitleContainer.classList.add('title-container');
+        var divTitle = document.createElement('div');
+        divTitle.classList.add('title');
+        divTitle.textContent = 'Peces recanvi';
+        divTitleContainer.appendChild(divTitle);
+        divPrincipal.appendChild(divTitleContainer);
+
+        // Container
+        var divContainer = document.createElement('div');
+        divContainer.classList.add('container');
+        divContainer.style.marginTop = '10px';
+        var divRow = document.createElement('div');
+        divRow.classList.add('row');
+
+        //Elements del formulari
+        var elementos = [
+            { label: 'Peça:', id: id_pesa_recanvi+'-pesa_pr', col: 'col-lg-4 col-xs-4', valor: document.getElementById('pesa_pr').value },
+            { label: 'Codi fabricant:', id: id_pesa_recanvi+'-codfab_pr', col: 'col-lg-3 col-xs-3', valor: document.getElementById('codfab_pr').value },
+            { label: 'Quantitat:', id: id_pesa_recanvi+'-qt_pr', col: 'col-lg-2 col-xs-2', valor: '1', errorId: 'pr_qt_error', valor: document.getElementById('qt_pr').value },
+            { label: 'Preu:', id: id_pesa_recanvi+'-preu_pr', col: 'col-lg-2 col-xs-2', errorId: id_pesa_recanvi+'-pr_preu_error', valor: document.getElementById('preu_pr').value }
+        ];
+
+        elementos.forEach(function(elemento) {
+            var divCol = document.createElement('div');
+            divCol.classList.add('col-lg-1', 'col-xs-1');
+            var label = document.createElement('label');
+            label.innerHTML = (elemento.label.includes('text-danger')) ? elemento.label : elemento.label + '<span class="text-danger">*</span>';
+            divCol.appendChild(label);
+
+            var divInputCol = document.createElement('div');
+            divInputCol.className = elemento.col;
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.classList.add('form-control', 'mb-2');
+            input.id = elemento.id;
+            if (elemento.valor) {
+                input.value = elemento.valor;
+            }
+
+            input.addEventListener('input', function() {
+                console.log('Id: ' + elemento.id + " Error: id: " + elemento.errorId);
+            });
+
+            divInputCol.appendChild(input);
+            divRow.appendChild(divCol);
+            divRow.appendChild(divInputCol);
+        });
+
+        //Buttons
+        var botones = [
+            { id: id_pesa_recanvi + '-guarda_canvis', onclick: 'f_guardaCanvisPecesRecanvi(' + id_pesa_recanvi + ')', icono: 'fa-floppy-disk', param: id_pesa_recanvi },
+            { id: id_pesa_recanvi + '-elimina_feina', onclick: 'f_eliminaTipusFeina(' + id_pesa_recanvi + ')', icono: 'fa-trash', param: id_pesa_recanvi }
+        ];
+    
+        botones.forEach(function(boton) {
+            var divCol = document.createElement('div');
+            if(boton.icono=='fa-floppy-disk'){
+                divCol.classList.add('col-lg-8', 'col-xs-8');
+            }else{
+                divCol.classList.add('col-lg-1', 'col-xs-1');
+            }
+            
+            var button = document.createElement('button');
+            button.classList.add('b_elimina_filtre');
+            button.title = (boton.id.includes('guarda_canvis')) ? 'Guardar canvis' : 'Eliminar feina';
+            button.id = boton.id;
+
+            //Escoltadors dels buttons
+            button.addEventListener('click', function() {
+                if (boton.id.includes('guarda_canvis')) {
+                    f_guardaCanvisPecesRecanvi(boton.param);
+                } else {
+                    f_eliminaTipusFeina(boton.param);
+                }
+            });
+
+            var icon = document.createElement('i');
+            icon.classList.add('fa-solid', boton.icono, 'fa-xl');
+            button.appendChild(icon);
+            divCol.appendChild(button);
+            divRow.appendChild(divCol);
+        });
+        divContainer.appendChild(divRow);
+        divPrincipal.appendChild(divContainer);
+
+        var d_feines_reparacio = document.getElementById("feines_reparacio");
+        d_feines_reparacio.appendChild(divPrincipal);
+
+        //Netejar camps de text
+        document.getElementById('pesa_pr').value = "";
+        document.getElementById('codfab_pr').value = "";
+        document.getElementById('qt_pr').value = "1";
+        document.getElementById('preu_pr').value = "";
+    }
+
     function f_generaFeinesMecanic(id_linia_reparacio) {
-        // Crea un elemento div principal
+        // Div principal
         var divPrincipal = document.createElement('div');
         divPrincipal.classList.add('titled-border', 'feines_mecanic');
         divPrincipal.id = id_linia_reparacio + '-d_fm';
     
-        // Crea el contenedor del título
+        // Container del titol
         var divTitleContainer = document.createElement('div');
         divTitleContainer.classList.add('title-container');
         var divTitle = document.createElement('div');
@@ -597,13 +1192,13 @@
         divTitleContainer.appendChild(divTitle);
         divPrincipal.appendChild(divTitleContainer);
     
-        // Crea el contenedor del formulario
+        // Container
         var divContainer = document.createElement('div');
         divContainer.classList.add('container');
         var divRow = document.createElement('div');
         divRow.classList.add('row');
     
-        // Crea los elementos de formulario
+        //Elements del formulari
         var elementos = [
             { label: 'Descripció:', id: id_linia_reparacio + '-desc_fm', col: 'col-lg-4 col-xs-4 ml-3', tipo: 'text', valor: document.getElementById('desc_fm').value },
             { label: 'Quantitat:', id: id_linia_reparacio + '-qt_fm', col: 'col-lg-1 col-xs-1', tipo: 'text', valor: document.getElementById('qt_fm').value, errorId: id_linia_reparacio + '-fm_qt_error' },
@@ -620,7 +1215,7 @@
             divCol.appendChild(label);
     
             var divInputCol = document.createElement('div');
-            divInputCol.className = elemento.col.replace(/\s+/g, ''); // Eliminar espacios en blanco del nombre de la clase
+            divInputCol.className = elemento.col.replace(/\s+/g, ''); 
             var input = document.createElement('input');
             input.type = elemento.tipo;
             input.classList.add('form-control', 'mb-2');
@@ -630,7 +1225,7 @@
             }
 
             input.addEventListener('input', function() {
-                // Aquí puedes poner el código que deseas que se ejecute cuando haya un evento input en este input
+                
                 
                 console.log('Id: '+ elemento.id+" Error: id: "+elemento.errorId);
             });
@@ -640,7 +1235,7 @@
             divRow.appendChild(divInputCol);
         });
     
-        // Crea los botones
+        //Buttons
         var botones = [
             { id: id_linia_reparacio + '-guarda_canvis', onclick: 'f_guardaCanvis(' + id_linia_reparacio + ')', icono: 'fa-floppy-disk', param: id_linia_reparacio },
             { id: id_linia_reparacio + '-elimina_feina', onclick: 'f_eliminaTipusFeina(' + id_linia_reparacio + ')', icono: 'fa-trash', param: id_linia_reparacio }
@@ -654,7 +1249,7 @@
             button.title = (boton.id.includes('guarda_canvis')) ? 'Guardar canvis' : 'Eliminar feina';
             button.id = boton.id;
 
-           // Asignar la función directamente al evento click
+            //Escoltadors dels buttons
             button.addEventListener('click', function() {
                 if (boton.id.includes('guarda_canvis')) {
                     f_guardaCanvis(boton.param);
@@ -662,7 +1257,7 @@
                     f_eliminaTipusFeina(boton.param);
                 }
             });
-            //button.disabled = true;
+
             var icon = document.createElement('i');
             icon.classList.add('fa-solid', boton.icono, 'fa-xl');
             button.appendChild(icon);
@@ -670,7 +1265,7 @@
             divRow.appendChild(divCol);
         });
     
-        // Agrega la fila al contenedor del formulario
+
         divContainer.appendChild(divRow);
         divPrincipal.appendChild(divContainer);
     
@@ -693,49 +1288,72 @@
         let qt = document.getElementById(id_linia_reparacio+'-qt_fm').value;
         let preu = document.getElementById(id_linia_reparacio+'-preu_fm').value;
 
-        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
-        $.ajax({
-            type: 'POST',
-            url: '/editar_feina_mecanic/',
-            data: {
-                'id_reparacio': id_reparacio,
-                'id_linia_reparacio': id_linia_reparacio,
-                'desc': desc,
-                'qt': qt,
-                'preu': preu,
-                'csrfmiddlewaretoken': csrfToken,
-            },
-            success: function(data) {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Guardar canvis feina mecànic",
-                        text: "Els canvis s'han guardat correctament",
-                    });
+        const valida_preu = /^\d+(\.\d+)?$/;
+        const valida_qt = /^\d+(\.(25|5|75|0))?$/;
+        let b_valida_preu = true;
+        let b_valida_qt = true;
 
-                } else {
+        if(preu.length!=0){
+            b_valida_preu = valida_preu.test(preu);
+        }
+        if(qt.length!=0){
+            b_valida_qt = valida_qt.test(qt);
+        }
+
+
+        if(desc.length>0 && b_valida_preu && b_valida_qt){
+            var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/editar_feina_mecanic/',
+                data: {
+                    'id_reparacio': id_reparacio,
+                    'id_linia_reparacio': id_linia_reparacio,
+                    'desc': desc,
+                    'qt': qt,
+                    'preu': preu,
+                    'csrfmiddlewaretoken': csrfToken,
+                },
+                success: function(data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Guardar canvis feina mecànic",
+                            text: "Els canvis s'han guardat correctament",
+                        });
+    
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Guardar canvis feina mecànic",
+                            text: "S'ha produït un error guardant els canvis de feina mecànic",
+                        });
+                    }
+                },
+                error: function() {
                     Swal.fire({
                         icon: "error",
                         title: "Guardar canvis feina mecànic",
                         text: "S'ha produït un error guardant els canvis de feina mecànic",
                     });
                 }
-            },
-            error: function() {
-                Swal.fire({
-                    icon: "error",
-                    title: "Guardar canvis feina mecànic",
-                    text: "S'ha produït un error guardant els canvis de feina mecànic",
-                });
-            }
-        });
+            });
+        }else{
+            Swal.fire({
+                icon: "error",
+                title: "Guardar canvis feina mecànic",
+                text: "S'ha produït un error de validació dels camps a modificar. La descripció és un camp obligatori. El preu ha de ser un número vàlid",
+            });
+        }
+
+        
 
 
     }
 
     function f_eliminaTipusFeina(id_linia_reparacio){
         Swal.fire({
-            title: "Estàs segur que vols eliminar el la feina?",
+            title: "Estàs segur que vols eliminar-lo?",
             //text: "You won't be able to revert this!",
             icon: "warning",
             showCancelButton: true,
@@ -756,28 +1374,46 @@
                     },
                     success: function(data) {
                         if (data.success) {
-                            document.getElementById(id_linia_reparacio+'-d_fm').innerHTML = "";
-                            document.getElementById(id_linia_reparacio+'-d_fm').style.display = "none";
+                            try{
+                                document.getElementById(id_linia_reparacio+'-d_fm').innerHTML = "";
+                                document.getElementById(id_linia_reparacio+'-d_fm').style.display = "none";
+                            }catch(e){};
+
+                            try{
+                                document.getElementById(id_linia_reparacio+'-d_pr').innerHTML = "";
+                                document.getElementById(id_linia_reparacio+'-d_pr').style.display = "none";
+                            }catch(e){};
+
+                            try{
+                                document.getElementById(id_linia_reparacio+'-d_ac').innerHTML = "";
+                                document.getElementById(id_linia_reparacio+'-d_ac').style.display = "none";
+                            }catch(e){};
+
+                            try{
+                                document.getElementById(id_linia_reparacio+'-d_p').innerHTML = "";
+                                document.getElementById(id_linia_reparacio+'-d_p').style.display = "none";
+                            }catch(e){};
+                            
         
                             Swal.fire({
                                 icon: "success",
-                                title: "Eliminar feina mecanic",
-                                text: "La feina de mecànic s'ha eliminat correctament",
+                                title: "Eliminar feina",
+                                text: "La feina s'ha eliminat correctament",
                             });
         
                         } else {
                             Swal.fire({
                                 icon: "error",
-                                title: "Eliminar feina mecanic",
-                                text: "S'ha produït un error eliminant la feina de mecànic",
+                                title: "Eliminar feina",
+                                text: "S'ha produït un error a intentar eliminar la feina",
                             });
                         }
                     },
                     error: function() {
                         Swal.fire({
                             icon: "error",
-                            title: "Eliminar feina mecanic",
-                            text: "S'ha produït un error eliminant la feina de mecànic",
+                            title: "Eliminar feina",
+                            text: "S'ha produït un error a intentar eliminar la feina",
                         });
                     }
                 });

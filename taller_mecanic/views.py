@@ -129,10 +129,11 @@ def reparacio(request, id_reparacio):
     definicio_tipus_linia = utils.get_definicio_tipus_linia()
     packs = utils.get_packs()
     client = utils.get_client_reparacio(id_reparacio)
+    packs_json = utils.get_packs_json()
     #return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicles':vehicles, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'clients':clients})
 
     reparacio = get_object_or_404(models.Reparacio, pk=id_reparacio)
-    return render(request, 'editar_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicle':vehicle, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'client':client, 'reparacio': reparacio})
+    return render(request, 'editar_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicle':vehicle, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'client':client, 'reparacio': reparacio, "packs_json":packs_json})
 
 def add_vehicle(request):
     if(request.method == 'POST'):
@@ -176,3 +177,74 @@ def eliminar_feina_mecanic(request):
 
     return render(request, 'index.html')      
 
+def add_pesa_recanvi(request):
+    if(request.method == 'POST'):
+        id_reparacio = request.POST.get('id_reparacio')
+        pesa = request.POST.get('pesa')
+        qt = request.POST.get('qt')
+        codfab = request.POST.get('codfab')
+        preu = request.POST.get('preu')
+
+        return utils.add_pesa_recanvi(request, id_reparacio, pesa, qt, codfab, preu)
+
+    return render(request, 'index.html')
+
+def editar_pesa_recanvi(request):
+    if(request.method == 'POST'):
+        id_reparacio = request.POST.get('id_reparacio')
+        id_linia_reparacio = request.POST.get('id_linia_reparacio')
+        pesa = request.POST.get('pesa')
+        qt = request.POST.get('qt')
+        codfab = request.POST.get('codfab')
+        preu = request.POST.get('preu')
+
+        return utils.editar_pesa_recanvi(request, id_reparacio, id_linia_reparacio, pesa, qt, preu, codfab)
+
+    return render(request, 'index.html')
+
+def add_altres_conceptes(request):
+    if(request.method == 'POST'):
+        id_reparacio = request.POST.get('id_reparacio')
+        desc = request.POST.get('desc')
+        qt = request.POST.get('qt')
+        preu = request.POST.get('preu')
+
+        return utils.add_altres_conceptes(request, id_reparacio, desc, qt, preu)
+
+    return render(request, 'index.html')
+
+def editar_altres_conceptes(request):
+    if(request.method == 'POST'):
+        id_reparacio = request.POST.get('id_reparacio')
+        id_linia_reparacio = request.POST.get('id_linia_reparacio')
+        desc = request.POST.get('desc')
+        qt = request.POST.get('qt')
+        preu = request.POST.get('preu')
+
+        return utils.editar_altres_conceptes(request, id_reparacio, id_linia_reparacio, desc, qt, preu)
+
+    return render(request, 'index.html')
+
+def add_packs(request):
+    if(request.method == 'POST'):
+        id_reparacio = request.POST.get('id_reparacio')
+        id_pack = request.POST.get('id_pack')
+        preu = request.POST.get('preu')
+        desc = request.POST.get('desc')
+
+        return utils.add_packs(request, id_reparacio, id_pack, preu, desc)
+
+    return render(request, 'index.html')
+
+
+def editar_packs(request):
+    if(request.method == 'POST'):
+        id_reparacio = request.POST.get('id_reparacio')
+        id_linia_reparacio = request.POST.get('id_linia_reparacio')
+        desc = request.POST.get('desc')
+        id_pack = request.POST.get('id_pack')
+        preu = request.POST.get('preu')
+
+        return utils.editar_packs(request, id_reparacio, id_linia_reparacio, desc, id_pack, preu)
+
+    return render(request, 'index.html')
