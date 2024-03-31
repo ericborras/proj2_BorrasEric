@@ -303,7 +303,58 @@
         //f_marca_model.val() f_client.val()
 
         //CRIDA AJAX PER GUARDAR EL VEHICLE
+        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/add_vehicle/',
+                data: {
+                    'kms': kms,
+                    'matricula': matricula,
+                    'marca_model': f_marca_model.val(),
+                    'client': f_client.val(),
+                    'csrfmiddlewaretoken': csrfToken,
+                },
+                success: function(data) {
+                    if (data.success) {
 
+                        //Tancar modal
+                        modal.style.display = "none";
+                        //Assignar al select el nou vehicle
+                        var nova_opc = new Option(data.vehicle.matricula+" "+data.vehicle.nom, data.vehicle.id, true, true);
+
+                        // Agregamos la nueva opción al select nativo
+                        $("#vehicle").append(nova_opc);
+
+                        // Actualizamos el control de Select2
+                        $("#vehicle").trigger("change.select2");
+
+                        //Canviem valors dels inputs disableds
+                        document.getElementById('marca_model').value = data.vehicle.nom;
+                        document.getElementById('kms').value = data.vehicle.kms;
+                        document.getElementById('matricula').value = data.vehicle.matricula;
+                        
+                        Swal.fire({
+                            itle: "Guardar vehicle",
+                            text: "El vehicle s'ha guardat correctament",
+                            icon: "success"
+                        });
+                       
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Guardar vehicle",
+                            text: "S'ha produït un error guardant el vehicle",
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Guardar vehicle",
+                        text: "S'ha produït un error guardant el vehicle",
+                    });
+                }
+            });
 
     }
 

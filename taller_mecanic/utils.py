@@ -457,9 +457,6 @@ def get_vehicle(id_vehicle):
 
     if row:
         
-        # Crea una instancia de modelo Usuari con los datos de la fila obtenida
-        preu = row[0]
-
         vehicle = models.Vehicle(*row)
         vehicle_json = vehicle.to_json()
             
@@ -570,3 +567,72 @@ def get_marca_models():
         packs = models.MarcaModel(*row)
         data.append(packs)
     return data
+
+def add_vehicle(request, kms, matricula, marca_model, client):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL
+        cursor.execute("INSERT INTO vehicle (matricula, kms, id_client, id_marca_model) VALUES (%s, %s, %s, %s)", [matricula, kms, client, marca_model])
+
+        # Obtener el último ID insertado
+        id_vehicle = cursor.lastrowid
+
+
+        query = """
+            SELECT v.id, v.matricula, mm.nom, v.kms 
+            FROM vehicle v left join marca_model mm on v.id_marca_model = mm.id
+            WHERE v.id = %s
+        """
+
+        with connection.cursor() as cursor:
+            cursor.execute(query, [id_vehicle])
+            row = cursor.fetchone()
+
+        if row:
+            row_dict = {
+                "id": row[0],
+                "matricula": row[1],
+                "nom": row[2],
+                "kms": row[3]
+            }
+
+        return JsonResponse({'success': True, 'vehicle':row_dict})
+    
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+
+def add_feina_mecanic(request, id_reparacio, desc, qt, preu):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("INSERT INTO linies_reparacio (id_reparacio, id_def, descripcio, quantitat, preu) VALUES (%s, 1, %s, %s, %s)", [id_reparacio, desc, qt, preu])
+
+        # Obtener el último ID insertado
+        id_feina_mecanic = cursor.lastrowid
+
+        return JsonResponse({'success':True, 'id_linia_reparacio':id_feina_mecanic})
+    
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+def editar_feina_mecanic(request, id_reparacio, id_linia_reparacio, desc, qt, preu):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("update linies_reparacio set descripcio = %s, preu = %s, quantitat = %s where id = %s", [desc, preu, qt, id_linia_reparacio])
+
+        return JsonResponse({'success':True})
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+def eliminar_feina_mecanic(request, id_linia_reparacio):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("delete from linies_reparacio where id = %s", [id_linia_reparacio])
+
+        return JsonResponse({'success':True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})

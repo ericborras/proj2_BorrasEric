@@ -133,3 +133,46 @@ def reparacio(request, id_reparacio):
 
     reparacio = get_object_or_404(models.Reparacio, pk=id_reparacio)
     return render(request, 'editar_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicle':vehicle, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'client':client, 'reparacio': reparacio})
+
+def add_vehicle(request):
+    if(request.method == 'POST'):
+        kms = request.POST.get('kms')
+        matricula = request.POST.get('matricula')
+        marca_model = request.POST.get('marca_model')
+        client = request.POST.get('client')
+        return utils.add_vehicle(request, kms, matricula, marca_model, client)
+    
+    return render(request, 'index.html')
+
+
+def add_feina_mecanic(request):
+    if(request.method == 'POST'):
+        id_reparacio = request.POST.get('id_reparacio')
+        desc = request.POST.get('desc')
+        qt = request.POST.get('qt')
+        preu = request.POST.get('preu')
+        return utils.add_feina_mecanic(request, id_reparacio, desc, qt, preu)
+    
+    return render(request, 'index.html')
+
+
+def editar_feina_mecanic(request):
+    if(request.method == 'POST'):
+        id_reparacio = request.POST.get('id_reparacio')
+        id_linia_reparacio = request.POST.get('id_linia_reparacio')
+        desc = request.POST.get('desc')
+        qt = request.POST.get('qt')
+        preu = request.POST.get('preu')
+
+        return utils.editar_feina_mecanic(request, id_reparacio, id_linia_reparacio, desc, qt, preu)
+
+    return render(request, 'index.html')
+
+def eliminar_feina_mecanic(request):
+    if(request.method == 'POST'):
+        id_linia_reparacio = request.POST.get('id_linia_reparacio')
+
+        return utils.eliminar_feina_mecanic(request, id_linia_reparacio)
+
+    return render(request, 'index.html')      
+
