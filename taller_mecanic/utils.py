@@ -737,3 +737,32 @@ def editar_packs(request, id_reparacio, id_linia_reparacio, desc, id_pack, preu)
 
     except Exception as e:
         return JsonResponse({'success': False, 'msg': e})
+    
+
+def get_linies_reparacio(id_reparacio):
+    query = """
+            SELECT id, id_def, descripcio, preu, codi_fabricant, quantitat, id_pack
+            FROM linies_reparacio
+            WHERE id_reparacio = %s
+            """
+    
+    with connection.cursor() as cursor:
+        
+        cursor.execute(query, [id_reparacio])
+        results = cursor.fetchall()
+
+    data = []
+    
+    for row in results:
+        row_dict = {
+            "id": row[0],
+            "id_def": row[1],
+            "descripcio": row[2],
+            "preu": row[3],
+            "codi_fabricant": row[4],
+            "quantitat": row[5],
+            "id_pack": row[6]
+        }
+        data.append(row_dict)
+        
+    return data

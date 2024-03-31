@@ -130,10 +130,11 @@ def reparacio(request, id_reparacio):
     packs = utils.get_packs()
     client = utils.get_client_reparacio(id_reparacio)
     packs_json = utils.get_packs_json()
+    linies_reparacio = utils.get_linies_reparacio(id_reparacio)
     #return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicles':vehicles, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'clients':clients})
 
     reparacio = get_object_or_404(models.Reparacio, pk=id_reparacio)
-    return render(request, 'editar_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicle':vehicle, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'client':client, 'reparacio': reparacio, "packs_json":packs_json})
+    return render(request, 'editar_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicle':vehicle, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'client':client, 'reparacio': reparacio, "packs_json":packs_json, 'linies_reparacio':linies_reparacio})
 
 def add_vehicle(request):
     if(request.method == 'POST'):
@@ -185,6 +186,7 @@ def add_pesa_recanvi(request):
         codfab = request.POST.get('codfab')
         preu = request.POST.get('preu')
 
+        print('LA QT: ',qt)
         return utils.add_pesa_recanvi(request, id_reparacio, pesa, qt, codfab, preu)
 
     return render(request, 'index.html')
