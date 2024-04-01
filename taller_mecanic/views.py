@@ -132,10 +132,11 @@ def reparacio(request, id_reparacio):
     client = utils.get_client_reparacio(id_reparacio)
     packs_json = utils.get_packs_json()
     linies_reparacio = utils.get_linies_reparacio(id_reparacio)
+    estat_reparacio = utils.get_estat_reparacio(id_reparacio)
     #return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicles':vehicles, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'clients':clients})
 
     reparacio = get_object_or_404(models.Reparacio, pk=id_reparacio)
-    return render(request, 'editar_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicle':vehicle, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'client':client, 'reparacio': reparacio, "packs_json":packs_json, 'linies_reparacio':linies_reparacio})
+    return render(request, 'editar_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicle':vehicle, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'client':client, 'reparacio': reparacio, "packs_json":packs_json, 'linies_reparacio':linies_reparacio,'estat_reparacio':estat_reparacio})
 
 def add_vehicle(request):
     if(request.method == 'POST'):
@@ -249,5 +250,13 @@ def editar_packs(request):
         preu = request.POST.get('preu')
 
         return utils.editar_packs(request, id_reparacio, id_linia_reparacio, desc, id_pack, preu)
+
+    return render(request, 'index.html')
+
+def rebutjar_reparacio(request):
+    if(request.method == 'POST'):
+        id_reparacio = request.POST.get('id_reparacio')
+
+        return utils.rebutjar_reparacio(request, id_reparacio)
 
     return render(request, 'index.html')

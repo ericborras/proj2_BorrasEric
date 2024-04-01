@@ -2,7 +2,7 @@ let id_reparacio;
 $(document).ready(function() {
     $('.js-example-basic-single').select2();
 
-    document.getElementById('d_t_feines_reparacio').style.display = "none";
+    //document.getElementById('d_t_feines_reparacio').style.display = "none";
 
     f_altres_conceptes_escoltadors();
     f_peces_recanvi_escoltadors();
@@ -24,7 +24,264 @@ $(document).ready(function() {
     document.getElementById('add_ac').addEventListener('click',f_afegeixAltresConceptes);
     document.getElementById('add_pr').addEventListener('click',f_afegeixPecesRecanvi);
     document.getElementById('add_p').addEventListener('click', f_afegeixPacks);
+
+
+    document.getElementById('rebutjar_reparacio').addEventListener('click',f_rebutjaReparacio);
+    f_activarEscoltadorsTotsInputs();
+    f_comprovarTotsInputs();
 });
+
+function f_activarEscoltadorsTotsInputs(){
+
+        let feines_reparacio = document.getElementById("feines_reparacio");
+    
+        feines_reparacio.querySelectorAll("input").forEach(function(input) {
+            let id = input.id;
+            document.getElementById(id).addEventListener('input', f_comprovarTotsInputs);
+        });
+        
+        // Recorrer todos los elementos <select> dentro del div
+        feines_reparacio.querySelectorAll("select").forEach(function(select) {
+            console.log("Valor del select: " + select.value);
+            let id = select.id;
+    
+            $('#'+id).on('change', function() {
+                f_comprovarTotsInputs();
+            });
+
+        });
+}
+
+
+function f_comprovarTotsInputs(){
+    /*
+        Comprovar que TOTS ELS INPUTS de dins el div amb id feines_reparacio tinguin un valor (i que sigui vàlid)
+    */
+    const regex_quantitats = /^\d+(\.(25|5|75|0))?$/;
+    const regex_preu = /^\d+(\.\d+)?$/;
+    let feines_reparacio = document.getElementById("feines_reparacio");
+
+    //Saber quants <input> conté el div
+    let qt_inputs = feines_reparacio.querySelectorAll("input").length;
+    //Saber quants <select> conté el div
+    let qt_selects = feines_reparacio.querySelectorAll("select").length;
+
+    let total_elements = qt_inputs + qt_selects;
+    let total_elements_correctes = 0;
+
+    feines_reparacio.querySelectorAll("input").forEach(function(input) {
+        //console.log("Valor del input: " + input.value);
+        let id = input.id;
+
+        let id_p = id.split('_'); 
+        let tipus_feina = id_p[1];
+
+        switch(tipus_feina){
+            case 'p':
+                //Pack - En aquest cas solament existeix un tipus possible d'input (Preu)
+                if(regex_preu.test(input.value)){
+                    total_elements_correctes++;
+                    document.getElementById(id).style.borderColor = "#ced4da";
+                }else{
+                    total_elements_correctes--;
+                    document.getElementById(id).style.borderColor = "red"; 
+                    console.info("Incorrecte: "+id); 
+                }
+                break;
+            case 'pr':
+                //Peça recanvi - Pot ser qt, preu o text
+                if(id.includes('qt')){
+                    if(regex_quantitats.test(input.value)){
+                        total_elements_correctes++;
+                        document.getElementById(id).style.borderColor = "#ced4da";
+                    }else{
+                        total_elements_correctes--;
+                        document.getElementById(id).style.borderColor = "red";
+                        console.info("Incorrecte: "+id);   
+                    }
+                }else if(id.includes('preu')){
+                    if(regex_preu.test(input.value)){
+                        total_elements_correctes++;
+                        document.getElementById(id).style.borderColor = "#ced4da";
+                    }else{
+                        total_elements_correctes--;
+                        document.getElementById(id).style.borderColor = "red";  
+                        console.info("Incorrecte: "+id); 
+                    }
+                    
+                }else{
+                    if(input.value.length>0){
+                        total_elements_correctes++;
+                        document.getElementById(id).style.borderColor = "#ced4da";
+                    }else{
+                        total_elements_correctes--;
+                        document.getElementById(id).style.borderColor = "red";  
+                        console.info("Incorrecte: "+id); 
+                    }
+                }
+                break;
+            case 'ac':
+                //Altres conceptes - Pot ser qt, preu, desc
+                if(id.includes('qt')){
+                    if(regex_quantitats.test(input.value)){
+                        total_elements_correctes++;
+                        document.getElementById(id).style.borderColor = "#ced4da";
+                    }else{
+                        total_elements_correctes--;
+                        document.getElementById(id).style.borderColor = "red";  
+                        console.info("Incorrecte: "+id); 
+                    }
+                }else if(id.includes('preu')){
+                    if(regex_preu.test(input.value)){
+                        total_elements_correctes++;
+                        document.getElementById(id).style.borderColor = "#ced4da";
+                    }else{
+                        total_elements_correctes--;
+                        document.getElementById(id).style.borderColor = "red";  
+                        console.info("Incorrecte: "+id); 
+                    }
+                }else{
+                    if(input.value.length>0){
+                        total_elements_correctes++;
+                        document.getElementById(id).style.borderColor = "#ced4da";
+                    }else{
+                        total_elements_correctes--;
+                        document.getElementById(id).style.borderColor = "red";  
+                        console.info("Incorrecte: "+id); 
+                    }
+                }
+                break;
+            case 'fm':
+                //Feines mecànic - Pot ser qt, preu, desc
+                if(id.includes('qt')){
+                    if(regex_quantitats.test(input.value)){
+                        total_elements_correctes++;
+                        document.getElementById(id).style.borderColor = "#ced4da";
+                    }else{
+                        total_elements_correctes--;
+                        document.getElementById(id).style.borderColor = "red";  
+                        console.info("Incorrecte: "+id); 
+                    }
+                }else if(id.includes('preu')){
+                    if(regex_preu.test(input.value)){
+                        total_elements_correctes++;
+                        document.getElementById(id).style.borderColor = "#ced4da";
+                    }else{
+                        total_elements_correctes--;
+                        document.getElementById(id).style.borderColor = "red";  
+                        console.info("Incorrecte: "+id); 
+                    }
+                }else{
+                    if(input.value.length>0){
+                        total_elements_correctes++;
+                        document.getElementById(id).style.borderColor = "#ced4da";
+                    }else{
+                        total_elements_correctes--;
+                        document.getElementById(id).style.borderColor = "red";  
+                        console.info("Incorrecte: "+id); 
+                    }
+                }
+                break;
+        }
+    });
+    
+    // Recorrer todos los elementos <select> dentro del div
+    feines_reparacio.querySelectorAll("select").forEach(function(select) {
+        console.log("Valor del select: " + select.value);
+        let id = select.id;
+
+        let id_p = id.split('-'); 
+        let tipus_feina = id_p[1];
+
+        switch(tipus_feina){
+            case 'packs':
+                'Packs'
+                if(select.value!="-1"){
+                    total_elements_correctes++;
+                    $("#"+id).next(".select2-container").find(".select2-selection").css({
+                        "width": "320px",
+                        "border-color": "#ced4da"
+                    });
+                    
+                }else{
+                    total_elements_correctes--; 
+                    $("#"+id).next(".select2-container").find(".select2-selection").css({
+                        "width": "320px",
+                        "border-color": "red"
+                    });
+                }
+            break;
+        }
+    });
+
+    if(total_elements_correctes==total_elements){
+        //Activar botó tancar reparació
+        document.getElementById('tancar_reparacio').disabled = false;
+    }else{
+        document.getElementById('tancar_reparacio').disabled = true;
+    }
+
+}
+
+function f_rebutjaReparacio(){
+    
+    Swal.fire({
+        title: "Estàs segur que vols rebutjar la reparació?",
+        //text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Rebutja"
+        }).then((result) => {
+        if (result.isConfirmed) {  
+            let id_reparacio = config.reparacio_id;
+
+            var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/rebutjar_reparacio/',
+                data: {
+                    'id_reparacio': id_reparacio,
+                    'csrfmiddlewaretoken': csrfToken,
+                },
+                success: function(data) {
+                    if (data.success) {
+
+                        document.getElementById('id_estat_reparacio').textContent = "Rebutjada";
+                        document.getElementById('id_estat_reparacio').style = "color: red";
+                        document.getElementById('btns_accions').style.display = "none";
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Rebutjar reparació",
+                            text: "Reparació rebutjada correctament",
+                        });
+
+                        
+    
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Rebutjar reparació",
+                            text: "Degut a un error, no s'ha pogut rebutjar la reparació",
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Rebutjar reparació",
+                        text: "Degut a un error, no s'ha pogut rebutjar la reparació",
+                    });
+                }
+            });
+        }
+        });
+
+
+}
+
 
 function f_afegeixAltresConceptes(){
     let id_reparacio = config.reparacio_id;

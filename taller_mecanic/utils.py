@@ -41,13 +41,13 @@ def existeix_usuari(request, login, password):
 def reparacions_mecanic(request):
     #Montem la consulta
     query = """
-            SELECT r.id, DATE_FORMAT(r.data_alta, '%%d/%%m/%%Y') AS data_alta, r.id_estat_reparacio, r.id_usuari, r.id_vehicle, er.nom AS estat_reparacio, v.matricula, 
+            SELECT r.id, DATE_FORMAT(r.data_alta, '%d/%m/%Y') AS data_alta, r.id_estat_reparacio, r.id_usuari, r.id_vehicle, er.nom AS estat_reparacio, v.matricula, 
             v.id_marca_model, 
             CASE 
             WHEN LENGTH(mm.nom) > 50 THEN CONCAT(LEFT(mm.nom, 47), '...') 
             ELSE mm.nom 
             END AS marca_model,
-            c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat
+            c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat, c.nif
             FROM reparacio r LEFT JOIN estat_reparacio er ON r.id_estat_reparacio = er.id
                                 LEFT JOIN vehicle v ON r.id_vehicle = v.id
                                 LEFT JOIN marca_model mm ON v.id_marca_model = mm.id
@@ -80,6 +80,7 @@ def reparacions_mecanic(request):
             "nom_usuari": row[12],
             "tipus_usuari": row[13],
             "ciutat": row[14],
+            "nif": row[15],
             "url_reparacio": reverse('reparacio', kwargs={'id_reparacio': row[0]})
         }
         print('ROW DICT: ',row_dict)
@@ -90,13 +91,13 @@ def reparacions_mecanic(request):
 def reparacions_recepcio(request):
     #Montem la consulta
     query = """
-            SELECT r.id, DATE_FORMAT(r.data_alta, '%%d/%%m/%%Y') AS data_alta, r.id_estat_reparacio, r.id_usuari, r.id_vehicle, er.nom AS estat_reparacio, v.matricula, 
+            SELECT r.id, DATE_FORMAT(r.data_alta, '%d/%m/%Y') AS data_alta, r.id_estat_reparacio, r.id_usuari, r.id_vehicle, er.nom AS estat_reparacio, v.matricula, 
             v.id_marca_model, 
             CASE 
             WHEN LENGTH(mm.nom) > 50 THEN CONCAT(LEFT(mm.nom, 47), '...') 
             ELSE mm.nom 
             END AS marca_model,
-            c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat
+            c.nom, c.cognoms, c.telefon, u.nom AS nom_usuari, tu.nom AS tipus_usuari, c.ciutat, c.nif
             FROM reparacio r LEFT JOIN estat_reparacio er ON r.id_estat_reparacio = er.id
                                 LEFT JOIN vehicle v ON r.id_vehicle = v.id
                                 LEFT JOIN marca_model mm ON v.id_marca_model = mm.id
@@ -129,6 +130,7 @@ def reparacions_recepcio(request):
             "nom_usuari": row[12],
             "tipus_usuari": row[13],
             "ciutat": row[14],
+            "nif": row[15],
             "url_reparacio": reverse('reparacio', kwargs={'id_reparacio': row[0]})
         }
         print('ROW DICT: ',row_dict)
@@ -769,3 +771,32 @@ def get_linies_reparacio(id_reparacio):
         data.append(row_dict)
         
     return data
+
+
+def get_estat_reparacio(id_reparacio):
+    query = """
+            SELECT er.nom
+            FROM reparacio r LEFT JOIN estat_reparacio er ON r.id_estat_reparacio = er.id
+            WHERE r.id = %s
+            """
+    with connection.cursor() as cursor:
+        cursor.execute(query, [id_reparacio])
+        row = cursor.fetchone()
+
+    if row:
+        estat = row[0]
+        return estat
+    else:
+        return None
+    
+def rebutjar_reparacio(request, id_reparacio):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("update reparacio set id_estat_reparacio = 3 where id = %s", [id_reparacio])
+
+
+        return JsonResponse({'success':True})
+    
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})

@@ -24,5 +24,6 @@ urlpatterns = [
     path('add_altres_conceptes/', views.add_altres_conceptes, name="add_altres_conceptes"),
     path('editar_altres_conceptes/', views.editar_altres_conceptes, name="editar_altres_conceptes"),
     path('add_packs/', views.add_packs, name="add_packs"),
-    path('editar_packs/', views.editar_packs, name="editar_packs")
+    path('editar_packs/', views.editar_packs, name="editar_packs"),
+    path('rebutjar_reparacio/', views.rebutjar_reparacio, name="rebutjar_reparacio")
 ]

@@ -10,10 +10,48 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <body>
-    
+    <style>
+        .fixed-buttons {
+            position: fixed;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            z-index: 2; 
+          }
+    </style>
+    {% if dades_usuari.id_tipus_usuari == 2  and estat_reparacio == 'Oberta' %}
+        <div class="fixed-buttons" id="btns_accions">
+            <div class="col-lg-1 col-xs-1">
+                <button class="b_elimina_filtre" title="Tancar reparació" id="tancar_reparacio" disabled>
+                    <i class="fa-solid fa-circle-check fa-xl"></i>
+                </button>
+            </div>
+            <div class="col-lg-1-col-xs-1">&nbsp;</div>
+            <div class="col-lg-1 col-xs-1">
+                <button class="b_elimina_filtre" title="Rebutjar reparació" id="rebutjar_reparacio">
+                    <i class="fas fa-times-circle fa-xl"></i>
+                </button>
+            </div>
+
+        </div>
+    {% endif %}
+      
+
     <div class="row">
         
-        <div class="col-lg-12 col-xs-12" style="margin-left:50px;margin-bottom:10px;"><h2><i class="fa-solid fa-wrench"></i> Reparació {{ reparacio.id }}</h2></div>
+        <div class="col-lg-6 col-xs-12" style="margin-left:50px;margin-bottom:10px;"><h2><i class="fa-solid fa-wrench"></i> Reparació {{ reparacio.id }}</h2></div>
+        
+        <div class="col-lg-4 col-xs-12 text-right" >
+            <h2>Estat: 
+                {% if estat_reparacio == "Oberta" or estat_reparacio == "Tancada" %}
+                    <span id="id_estat_reparacio">{{ estat_reparacio }}</span>
+                {% elif estat_reparacio == "Rebutjada" %}
+                    <span id="id_estat_reparacio" style="color:red;">{{ estat_reparacio }}</span>
+                {% elif estat_reparacio == "Pagada" %}
+                    <span id="id_estat_reparacio" style="color:green;">{{ estat_reparacio }}</span>
+                {% endif %}
+            </h2>
+        </div>
         
         <div class="col-lg-1 col-xs-1"></div>
         
@@ -83,7 +121,7 @@
           </div>
         </div>
 
-
+        {% if estat_reparacio == "Oberta" %}
         <div class="row" id="div_dtl_select">
             <h5>Escull el tipus de feina a realitzar: </h5>
             <select class="js-example-basic-single" id="definicio_tipus_linia" style="width: 220px;">
@@ -93,6 +131,7 @@
                 {% endfor %}
             </select>
         </div>
+        {% endif %}
 
         <!-- Diferents tipus de linia -->
         <div class="col-lg-12 col-xs-12">&nbsp;</div>
@@ -113,7 +152,7 @@
                         <label>Quantitat:</label>
                     </div>
                     <div class="col-lg-1 col-xs-1">
-                        <input type="text" class="form-control mb-2" id="qt_ac" value="1" />
+                        <input type="text" class="form-control mb-2" id="qt_ac" />
                         <div id="ac_qt_error" class="error"></div>
                     </div>
                     
@@ -191,7 +230,7 @@
                         <label>Quantitat:</label>
                     </div>
                     <div class="col-lg-1 col-xs-1">
-                        <input type="text" class="form-control mb-2" id="qt_pr" value="1"/>
+                        <input type="text" class="form-control mb-2" id="qt_pr"/>
                         <div id="pr_qt_error" class="error"></div>
                     </div>
                     <div class="col-lg-1 col-xs-1">&nbsp;</div>
@@ -229,7 +268,7 @@
                         <label>Quantitat:</label>
                     </div>
                     <div class="col-lg-1 col-xs-1">
-                        <input type="text" class="form-control mb-2" id="qt_fm" value="1"/>
+                        <input type="text" class="form-control mb-2" id="qt_fm" />
                         <div id="fm_qt_error" class="error"></div>
                     </div>
                     
@@ -270,13 +309,13 @@
                             <label><span class="text-danger">*</span>Descripció:</label>
                         </div>
                         <div class="col-lg-4 col-xs-4 ml-3" >
-                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-desc_fm" value="{{ lr.descripcio }}"/>
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-desc_fm" value="{{ lr.descripcio }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                         </div>
                         <div class="col-lg-1 col-xs-1">
                             <label>Quantitat:</label>
                         </div>
                         <div class="col-lg-1 col-xs-1">
-                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-qt_fm" value="{{ lr.quantitat }}"/>
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-qt_fm" value="{{ lr.quantitat }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                             <div id="{{ lr.id }}-fm_qt_error" class="error"></div>
                         </div>
                         
@@ -284,10 +323,10 @@
                             <label>Preu:</label>
                         </div>
                         <div class="col-lg-2 col-xs-2">
-                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_fm" value="{{ lr.preu }}" />
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_fm" value="{{ lr.preu }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                             <div id="{{ lr.id }}-fm_preu_error" class="error"></div>
                         </div> 
-                        
+                        {% if dades_usuari.id_tipus_usuari == 2 %}
                         <div class="col-lg-1 col-xs-1">
                             <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvis('{{ lr.id }}')">
                                 <i class="fa-solid fa-floppy-disk fa-xl"></i>
@@ -298,6 +337,7 @@
                                 <i class="fa-solid fa-trash fa-xl"></i>
                             </button>
                         </div>
+                        {% endif %}
 
                     </div>
                 </div>
@@ -313,19 +353,19 @@
                             <label><span class="text-danger">*</span>Peça:</label>
                         </div>
                         <div class="col-lg-4 col-xs-4">
-                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-pesa_pr" value="{{ lr.descripcio }}" />
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-pesa_pr" value="{{ lr.descripcio }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                         </div>
                         <div class="col-lg-2 col-xs-2">
                             <label><span class="text-danger">*</span>Codi fabricant:</label>
                         </div>
                         <div class="col-lg-2 col-xs-2">
-                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-codfab_pr" value="{{ lr.codi_fabricant }}"/>
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-codfab_pr" value="{{ lr.codi_fabricant }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                         </div>
                         <div class="col-lg-1 col-xs-1">
                             <label>Quantitat:</label>
                         </div>
                         <div class="col-lg-1 col-xs-1">
-                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-qt_pr" value="{{ lr.quantitat }}"/>
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-qt_pr" value="{{ lr.quantitat }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                             <div id="pr_qt_error" class="error"></div>
                         </div>
                         <div class="col-lg-1 col-xs-1">&nbsp;</div>
@@ -333,10 +373,10 @@
                             <label>Preu:</label>
                         </div>
                         <div class="col-lg-2 col-xs-2">
-                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_pr" value="{{ lr.preu }}"/>
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_pr" value="{{ lr.preu }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                             <div id="pr_preu_error" class="error"></div>
                         </div>
-                        
+                        {% if dades_usuari.id_tipus_usuari == 2 %}
                         <div class="col-lg-7 col-xs-7">
                             <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvisPecesRecanvi('{{ lr.id }}')">
                                 <i class="fa-solid fa-floppy-disk fa-xl"></i>
@@ -347,6 +387,7 @@
                                 <i class="fa-solid fa-trash fa-xl"></i>
                             </button>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -363,7 +404,7 @@
                             <label><span class="text-danger">*</span>Pack:</label>
                         </div>
                         <div class="col-lg-5 col-xs-5">
-                            <select class="js-example-basic-single" id="{{ lr.id }}-packs" style="width: 320px;">
+                            <select class="js-example-basic-single" id="{{ lr.id }}-packs" style="width: 320px;" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}>
                                 <option value="-1">Selecciona...</option>
                             {% for p in packs %}
                                 {% if lr.id_pack == p.id %}
@@ -381,6 +422,7 @@
                             <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_p" value="{{ lr.preu }}" disabled/>
                         </div>
                         <div class="col-lg-1 col-xs-1">&nbsp;</div>
+                        {% if dades_usuari.id_tipus_usuari == 2 %}
                         <div class="col-lg-1 col-xs-1">
                             <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvisPacks('{{ lr.id }}')">
                                 <i class="fa-solid fa-floppy-disk fa-xl"></i>
@@ -391,6 +433,7 @@
                                 <i class="fa-solid fa-trash fa-xl"></i>
                             </button>
                         </div>
+                        {% endif %}
                         
                     </div>
                 </div>
@@ -408,13 +451,13 @@
                             <label><span class="text-danger">*</span>Descripció:</label>
                         </div>
                         <div class="col-lg-4 col-xs-4" style="margin-left:10px;">
-                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-desc_ac" value="{{ lr.descripcio }}"/>
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-desc_ac" value="{{ lr.descripcio }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                         </div>
                         <div class="col-lg-1 col-xs-1">
                             <label>Quantitat:</label>
                         </div>
                         <div class="col-lg-1 col-xs-1">
-                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-qt_ac" value="{{ lr.quantitat }}" />
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-qt_ac" value="{{ lr.quantitat }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                             <div id="ac_qt_error" class="error"></div>
                         </div>
                         
@@ -422,9 +465,10 @@
                             <label>Preu:</label>
                         </div>
                         <div class="col-lg-2 col-xs-2">
-                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_ac" value="{{ lr.preu }}"/>
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_ac" value="{{ lr.preu }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                             <div id="ac_preu_error" class="error"></div>
                         </div> 
+                        {% if dades_usuari.id_tipus_usuari == 2 %}
                         <div class="col-lg-1 col-xs-1">
                             <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvisAltresConceptes('{{ lr.id }}')">
                                 <i class="fa-solid fa-floppy-disk fa-xl"></i>
@@ -435,6 +479,7 @@
                                 <i class="fa-solid fa-trash fa-xl"></i>
                             </button>
                         </div>
+                        {% endif %}
                         
                     </div>
                 </div>
