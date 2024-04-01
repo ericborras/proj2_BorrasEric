@@ -1,0 +1,149 @@
+{% extends 'layouts/base.html' %}
+
+{% load static %}
+
+{% block content %}
+{% include 'layouts/nav.html' %}
+
+<link rel="stylesheet" href="{% static '/styles/editar_reparacio.css' %}">
+
+<body>
+    {% csrf_token %}
+    <div style="margin-left:50px;">
+        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+        <div class="col-lg-5 col-xs-5"><h2> Configuració de paràmetres <i class="fa-solid fa-gear"></i></h2></div>
+        <div class="col-lg-6 col-xs-6">&nbsp;</div>
+    </div>
+    <br/>
+    <div class="container">
+        <div class="titled-border">
+            <div class="title-container">
+              <div class="title">Paràmetres <i class="fa-solid fa-euro-sign"></i></div>
+            </div>
+            <div class="container" style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-lg-1 col-xs-1">
+                        <label><span class="text-danger">*</span> IVA:</label>
+                        
+                    </div>
+                    <div class="col-lg-4 col-xs-4" style="margin-left:10px;">
+                        <input type="text" class="form-control mb-2" id="iva" value="{{ iva }}"/>
+                        <div id="iva_error" class="error"></div>
+                    </div>
+                    <div class="col-lg-2 col-xs-2">
+                        <label><span class="text-danger">*</span>Preu mà d'obra:</label>
+                        
+                    </div>
+                    <div class="col-lg-3 col-xs-3">
+                        <input type="text" class="form-control mb-2" id="ma_obra" value="{{ preu_ma_obra }}"/>
+                        <div id="ma_obra_error" class="error"></div>
+                    </div>
+
+                    <div class="col-lg-1 col-xs-1" style="margin-left:50px;">
+                        <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis_props">
+                            <i class="fa-solid fa-floppy-disk fa-xl"></i>
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+</body>
+
+
+<script>
+
+    let iva_valid = true;
+    let ma_obra_valid = true;
+
+    $(document).ready(function() {
+
+        document.getElementById('iva').addEventListener('input',f_comprovaIVA);
+        document.getElementById('ma_obra').addEventListener('input', f_comprovaMaObra);
+
+        document.getElementById('guarda_canvis_props').addEventListener('click',f_guardaCanvisProps);
+    });
+
+    function f_guardaCanvisProps(){
+
+        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+        let ma_obra = document.getElementById('ma_obra').value;
+        let iva = document.getElementById("iva").value
+        $.ajax({
+            type: 'POST',
+            url: '/guarda_canvis_props/',
+            data: {
+                'ma_obra': ma_obra,
+                'iva': iva,
+                'csrfmiddlewaretoken': csrfToken,
+            },
+            success: function(data) {
+                if (data.success) {
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Guardar canvis",
+                        text: "Els paràmetres s'han actualitzat correctament",
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Guardar canvis",
+                        text: "Degut a un error, no s'ha pogut actualitzar els valors dels paràmetres",
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Guardar canvis",
+                    text: "Degut a un error, no s'ha pogut actualitzar els valors dels paràmetres",
+                });
+            }
+        });
+    }
+
+    function f_comprovaIVA(){
+        const verificar_iva = /^(?!$)\d*\.?\d+(?:[eE][+-]?\d+)?$/;
+
+        if(verificar_iva.test(document.getElementById('iva').value)){
+            iva_valid = true;
+            document.getElementById('iva_error').textContent = "";
+        }else{
+            iva_valid = false;
+            document.getElementById('iva_error').textContent = "L'IVA ha de ser un valor númeric obligatori";
+        }
+
+        f_comprovaActivaBtnEco();
+    }
+
+    function f_comprovaMaObra(){
+        const verificar_ma_obra = /^(?!$)\d+(?:\.\d+)?$/;
+        
+        if(verificar_ma_obra.test(document.getElementById('ma_obra').value)){
+            ma_obra_valid = true;
+            document.getElementById('ma_obra_error').textContent = "";
+        }else{
+            ma_obra_valid = false;
+            document.getElementById('ma_obra_error').textContent = "El preu de mà d'obra es obligatori i positiu";
+        }
+
+        f_comprovaActivaBtnEco();
+    }
+
+    function f_comprovaActivaBtnEco(){
+        if(iva_valid && ma_obra_valid){
+            document.getElementById('guarda_canvis_props').disabled = false;
+        }else{
+            document.getElementById('guarda_canvis_props').disabled = true;
+        }
+    }
+
+
+</script>
+
+
+{% endblock %}

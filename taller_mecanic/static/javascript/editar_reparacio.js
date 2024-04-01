@@ -19,37 +19,225 @@ $(document).ready(function() {
 
     //Inicialment fins que no introdueixin client i vehicle no es pot afegir linies de reparació
     //document.getElementById('div_dtl_select').style.display = "none";!!!!
+    try{
+        document.getElementById('add_fm').addEventListener('click',f_afegeixFeinesMecanic);
+        document.getElementById('add_ac').addEventListener('click',f_afegeixAltresConceptes);
+        document.getElementById('add_pr').addEventListener('click',f_afegeixPecesRecanvi);
+        document.getElementById('add_p').addEventListener('click', f_afegeixPacks);
+    }catch(e){};
 
-    document.getElementById('add_fm').addEventListener('click',f_afegeixFeinesMecanic);
-    document.getElementById('add_ac').addEventListener('click',f_afegeixAltresConceptes);
-    document.getElementById('add_pr').addEventListener('click',f_afegeixPecesRecanvi);
-    document.getElementById('add_p').addEventListener('click', f_afegeixPacks);
 
+    try{
+        document.getElementById('rebutjar_reparacio').addEventListener('click',f_rebutjaReparacio);
+        document.getElementById('tancar_reparacio').addEventListener('click', f_tancarReparacio);
+    }catch(e){};
 
-    document.getElementById('rebutjar_reparacio').addEventListener('click',f_rebutjaReparacio);
-    f_activarEscoltadorsTotsInputs();
-    f_comprovarTotsInputs();
+    try{
+        if(config.estat_reparacio == "Oberta"){
+            f_activarEscoltadorsTotsInputs();
+            f_comprovarTotsInputs();
+        }else if(config.estat_reparacio == "Tancada"){
+            f_activarEscoltadorsInputsDte();
+            f_comprovarInputsDte();
+        }
+    }catch(e){};
+
+    try{
+        document.getElementById('generar_factura').addEventListener('click', f_generarFactura);
+    }catch(e){};
+
 });
+
+function f_generarFactura(){
+    let inputs = document.querySelectorAll('input[type="text"][id*="dte"]');
+
+    //Obtenir els descomptes y tenir-los associats amb el id de la linia de reparacio
+    let obj = {};
+    inputs.forEach(function(input) {
+
+        let id_p = input.id.split('-'); 
+        // Acceder a la primera parte del arreglo resultante
+        let id_r = id_p[0];
+
+        obj[id_r] = input.value;
+    });
+
+    console.info(obj);
+
+    Swal.fire({
+        title: "Estàs segur que vols generar la factura?",
+        //text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Genera factura"
+        }).then((result) => {
+        if (result.isConfirmed) {  
+            let id_reparacio = config.reparacio_id;
+
+            var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/genera_factura/',
+                data: {
+                    'id_reparacio': config.reparacio_id,
+                    'descomptes': JSON.stringify(obj),
+                    'csrfmiddlewaretoken': csrfToken,
+                },
+                success: function(data) {
+                    if (data.success) {
+
+                        //document.getElementById('generar_factura').style.display = "none";
+                        //Deshabilitar tots els inputs de dte
+                        inputs.forEach(function(input) {
+                            //document.getElementById(input.id).disabled = true;
+                        });
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Generar factura",
+                            text: "La factura s'ha generat correctament",
+                        });
+
+                        
+
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Generar factura",
+                            text: "Degut a un error, no s'ha pogut generar la factura",
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Generar factura",
+                        text: "Degut a un error, no s'ha pogut generar la factura",
+                    });
+                }
+            });
+        }
+    });
+
+}
+
+
+function f_comprovarInputsDte(){
+    const regex_dte = /^(100|\d{1,2})?$/;
+
+    let inputs = document.querySelectorAll('input[type="text"][id*="dte"]');
+
+
+    let total_elements = inputs.length;
+    let total_elements_correctes = 0;
+
+    // Iterar sobre los elementos encontrados e imprimir sus ids
+    inputs.forEach(function(input) {
+
+        if(regex_dte.test(input.value)){
+            total_elements_correctes++;
+            document.getElementById(input.id).style.borderColor = "#ced4da";
+        }else{
+            total_elements_correctes--;
+            document.getElementById(input.id).style.borderColor = "red"; 
+            console.info("Incorrecte: "+input.id); 
+        }
+
+    });
+
+    if(total_elements == total_elements_correctes){
+        document.getElementById('generar_factura').disabled = false;
+    }else{
+        document.getElementById('generar_factura').disabled = true;
+    }
+ 
+}
+
+function f_activarEscoltadorsInputsDte(){
+    let feines_reparacio = document.getElementById("feines_reparacio");
+
+    feines_reparacio.querySelectorAll("input").forEach(function(input) {
+        let id = input.id;
+        if(id.includes("dte")){
+            document.getElementById(id).addEventListener('input', f_comprovarInputsDte);
+        }
+    });
+}
+
+function f_tancarReparacio(){
+    Swal.fire({
+        title: "Estàs segur que vols tancar la reparació?",
+        //text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Tancar reparació"
+        }).then((result) => {
+        if (result.isConfirmed) {  
+            let id_reparacio = config.reparacio_id;
+
+            var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/tancar_reparacio/',
+                data: {
+                    'id_reparacio': id_reparacio,
+                    'csrfmiddlewaretoken': csrfToken,
+                },
+                success: function(data) {
+                    if (data.success) {
+
+                        document.getElementById('id_estat_reparacio').textContent = "Tancada";
+                        document.getElementById('btns_accions').style.display = "none";
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Tancar reparació",
+                            text: "Reparació tancada correctament",
+                        });
+
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Tancar reparació",
+                            text: "Degut a un error, no s'ha pogut tancar la reparació",
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Tancar reparació",
+                        text: "Degut a un error, no s'ha pogut tancar la reparació",
+                    });
+                }
+            });
+        }
+    });
+}
 
 function f_activarEscoltadorsTotsInputs(){
 
-        let feines_reparacio = document.getElementById("feines_reparacio");
-    
-        feines_reparacio.querySelectorAll("input").forEach(function(input) {
-            let id = input.id;
-            document.getElementById(id).addEventListener('input', f_comprovarTotsInputs);
-        });
-        
-        // Recorrer todos los elementos <select> dentro del div
-        feines_reparacio.querySelectorAll("select").forEach(function(select) {
-            console.log("Valor del select: " + select.value);
-            let id = select.id;
-    
-            $('#'+id).on('change', function() {
-                f_comprovarTotsInputs();
-            });
+    let feines_reparacio = document.getElementById("feines_reparacio");
 
+    feines_reparacio.querySelectorAll("input").forEach(function(input) {
+        let id = input.id;
+        document.getElementById(id).addEventListener('input', f_comprovarTotsInputs);
+    });
+    
+    // Recorrer todos los elementos <select> dentro del div
+    feines_reparacio.querySelectorAll("select").forEach(function(select) {
+        console.log("Valor del select: " + select.value);
+        let id = select.id;
+
+        $('#'+id).on('change', function() {
+            f_comprovarTotsInputs();
         });
+
+    });
 }
 
 

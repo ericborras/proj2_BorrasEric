@@ -1,8 +1,9 @@
+import importlib
 from django.contrib.auth.hashers import make_password, check_password
 from passlib.hash import bcrypt
 from django.db import connection,connections
 from django.http import JsonResponse
-from . import models
+from . import models, parametres
 import bcrypt
 from datetime import datetime
 from django.urls import reverse
@@ -746,7 +747,7 @@ def editar_packs(request, id_reparacio, id_linia_reparacio, desc, id_pack, preu)
 
 def get_linies_reparacio(id_reparacio):
     query = """
-            SELECT id, id_def, descripcio, preu, codi_fabricant, quantitat, id_pack
+            SELECT id, id_def, descripcio, preu, codi_fabricant, quantitat, id_pack, descompte
             FROM linies_reparacio
             WHERE id_reparacio = %s
             """
@@ -766,7 +767,8 @@ def get_linies_reparacio(id_reparacio):
             "preu": row[3],
             "codi_fabricant": row[4],
             "quantitat": round(row[5], 1),
-            "id_pack": row[6]
+            "id_pack": row[6],
+            "descompte": "" if(row[7]==0) else row[7],
         }
         data.append(row_dict)
         
@@ -800,3 +802,87 @@ def rebutjar_reparacio(request, id_reparacio):
     
     except Exception as e:
         return JsonResponse({'success': False, 'msg': e})
+    
+
+def tancar_reparacio(request, id_reparacio):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("update reparacio set id_estat_reparacio = 2 where id = %s", [id_reparacio])
+
+
+        return JsonResponse({'success':True})
+    
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+
+def genera_factura(request, id_reparacio, descomptes):
+    try:
+        cursor = connections['default'].cursor()
+        #Actualitzar totals linies reparació
+        for id_linia_reparacio, dte in descomptes.items():
+            cursor.execute(
+                "UPDATE linies_reparacio SET descompte = %s, preu_total = (preu * quantitat) - (preu * quantitat * %s / 100) WHERE id = %s",
+                [dte, dte, id_linia_reparacio]
+            )
+
+        #Una vegada actualitzats, crear registre a la taula factura, amb la suma de preu_total
+        data_actual = datetime.now().date()
+        cursor.execute("INSERT INTO reparacio (data_alta, id_estat_reparacio, id_usuari, id_vehicle) VALUES (%s, %s, %s, %s)", [datetime.now().date(), 1, request.session['dades_usuari']['id_tipus_usuari'], id_vehicle])
+        
+        return JsonResponse({'success':True})
+
+
+
+        
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+def get_es_reparacio_factura(id_reparacio):
+    #Montem la consulta
+    query = """
+        SELECT count(*) as total
+        from factura where id_reparacio = %s
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query, [id_reparacio])
+        row = cursor.fetchone()
+
+    if row:
+        
+        # Crea una instancia de modelo Usuari con los datos de la fila obtenida
+        return row[0]
+    else:
+        return 0
+    
+def guarda_canvis_props(request, ma_obra, iva):
+    try:
+        config = parametres.Configuracio('config.json')
+
+        config.modificar_valor('iva', iva)
+        config.modificar_valor('preu_ma_obra', ma_obra)
+
+        '''
+        # Obtener el valor actual de 'iva'
+        valor_iva = config.obtener_valor('iva')
+        print("El valor actual de 'iva' es:", valor_iva)
+
+        # Modificar el valor de 'iva' a 25
+        config.modificar_valor('iva', iva)
+        print("Se ha modificado el valor de 'iva' a 25")
+
+        # Obtener el nuevo valor de 'iva'
+        nuevo_valor_iva = config.obtener_valor('iva')
+        print("El nuevo valor de 'iva' es:", nuevo_valor_iva)
+
+        # Obtener el valor actual de 'preu_ma_obra'
+        valor_preu_ma_obra = config.obtener_valor('preu_ma_obra')
+        print("El valor actual de 'preu_ma_obra' es:", valor_preu_ma_obra)
+        '''
+        
+
+        return JsonResponse({'success':True})
+    except Exception as e:
+        return JsonResponse({'success':False}) 

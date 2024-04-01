@@ -35,22 +35,38 @@
 
         </div>
     {% endif %}
-      
 
+    {% if estat_reparacio == "Tancada" and dades_usuari.id_tipus_usuari == 1 %}
+    <div class="fixed-buttons" id="btns_accions">
+        <div class="col-lg-1 col-xs-1">
+            <button class="b_elimina_filtre" title="Generar factura" id="generar_factura">
+                <i class="fa-solid fa-file-invoice fa-xl"></i>
+            </button>
+        </div>
+    </div>
+    {% endif %}
+      
+    <br/>
     <div class="row">
         
-        <div class="col-lg-6 col-xs-12" style="margin-left:50px;margin-bottom:10px;"><h2><i class="fa-solid fa-wrench"></i> Reparació {{ reparacio.id }}</h2></div>
+        <div class="col-lg-7 col-xs-12" style="margin-left:50px;margin-bottom:10px;">  
+            <h2><i class="fa-solid fa-wrench"></i> Reparació {{ reparacio.id }}</h2>  
+        </div>
+           
+        
         
         <div class="col-lg-4 col-xs-12 text-right" >
-            <h2>Estat: 
-                {% if estat_reparacio == "Oberta" or estat_reparacio == "Tancada" %}
-                    <span id="id_estat_reparacio">{{ estat_reparacio }}</span>
-                {% elif estat_reparacio == "Rebutjada" %}
-                    <span id="id_estat_reparacio" style="color:red;">{{ estat_reparacio }}</span>
-                {% elif estat_reparacio == "Pagada" %}
-                    <span id="id_estat_reparacio" style="color:green;">{{ estat_reparacio }}</span>
-                {% endif %}
-            </h2>
+            <div class="row">
+                <h2>Estat: 
+                    {% if estat_reparacio == "Oberta" or estat_reparacio == "Tancada" %}
+                        <span id="id_estat_reparacio">{{ estat_reparacio }}</span>
+                    {% elif estat_reparacio == "Rebutjada" %}
+                        <span id="id_estat_reparacio" style="color:red;">{{ estat_reparacio }}</span>
+                    {% elif estat_reparacio == "Pagada" %}
+                        <span id="id_estat_reparacio" style="color:green;">{{ estat_reparacio }}</span>
+                    {% endif %}
+                </h2>  
+            </div>
         </div>
         
         <div class="col-lg-1 col-xs-1"></div>
@@ -325,7 +341,18 @@
                         <div class="col-lg-2 col-xs-2">
                             <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_fm" value="{{ lr.preu }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                             <div id="{{ lr.id }}-fm_preu_error" class="error"></div>
-                        </div> 
+                        </div>
+                        
+                        {% if dades_usuari.id_tipus_usuari == 1 and estat_reparacio == "Tancada" %}
+                        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+                        <div class="col-lg-1 col-xs-1">
+                            <label>Dte.</label>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-dte_fm" value="{{ lr.descompte }}" {% if te_factura > 0 %} disabled {% endif %}/>
+                        </div>
+                        {% endif %}
+                        
                         {% if dades_usuari.id_tipus_usuari == 2 %}
                         <div class="col-lg-1 col-xs-1">
                             <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvis('{{ lr.id }}')">
@@ -376,6 +403,17 @@
                             <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_pr" value="{{ lr.preu }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                             <div id="pr_preu_error" class="error"></div>
                         </div>
+
+                        {% if dades_usuari.id_tipus_usuari == 1 and estat_reparacio == "Tancada" %}
+                        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+                        <div class="col-lg-1 col-xs-1">
+                            <label>Dte.</label>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-dte_pr" value="{{ lr.descompte }}" {% if te_factura > 0 %} disabled {% endif %}/>
+                        </div>
+                        {% endif %}
+
                         {% if dades_usuari.id_tipus_usuari == 2 %}
                         <div class="col-lg-7 col-xs-7">
                             <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvisPecesRecanvi('{{ lr.id }}')">
@@ -422,6 +460,17 @@
                             <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_p" value="{{ lr.preu }}" disabled/>
                         </div>
                         <div class="col-lg-1 col-xs-1">&nbsp;</div>
+
+                        {% if dades_usuari.id_tipus_usuari == 1 and estat_reparacio == "Tancada" %}
+                        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+                        <div class="col-lg-1 col-xs-1">
+                            <label>Dte.</label>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-dte_p" value="{{ lr.descompte }}" {% if te_factura > 0 %} disabled {% endif %} />
+                        </div>
+                        {% endif %}
+
                         {% if dades_usuari.id_tipus_usuari == 2 %}
                         <div class="col-lg-1 col-xs-1">
                             <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvisPacks('{{ lr.id }}')">
@@ -468,6 +517,17 @@
                             <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_ac" value="{{ lr.preu }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
                             <div id="ac_preu_error" class="error"></div>
                         </div> 
+
+                        {% if dades_usuari.id_tipus_usuari == 1 and estat_reparacio == "Tancada" %}
+                        <div class="col-lg-1 col-xs-1">&nbsp;</div>
+                        <div class="col-lg-1 col-xs-1">
+                            <label>Dte.</label>
+                        </div>
+                        <div class="col-lg-1 col-xs-1">
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-dte_ac" value="{{ lr.descompte }}" {% if te_factura > 0 %} disabled {% endif %}/>
+                        </div>
+                        {% endif %}
+
                         {% if dades_usuari.id_tipus_usuari == 2 %}
                         <div class="col-lg-1 col-xs-1">
                             <button class="b_elimina_filtre" title="Guardar canvis" id="guarda_canvis-id" onclick="f_guardaCanvisAltresConceptes('{{ lr.id }}')">
@@ -500,6 +560,7 @@
     var config = {
         reparacio_id: "{{ reparacio.id }}",
         packs_json: "{{ packs_json|escapejs }}",
+        estat_reparacio: "{{ estat_reparacio }}",
     };
 </script>
 

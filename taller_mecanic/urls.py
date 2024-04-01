@@ -25,5 +25,9 @@ urlpatterns = [
     path('editar_altres_conceptes/', views.editar_altres_conceptes, name="editar_altres_conceptes"),
     path('add_packs/', views.add_packs, name="add_packs"),
     path('editar_packs/', views.editar_packs, name="editar_packs"),
-    path('rebutjar_reparacio/', views.rebutjar_reparacio, name="rebutjar_reparacio")
+    path('rebutjar_reparacio/', views.rebutjar_reparacio, name="rebutjar_reparacio"),
+    path('tancar_reparacio/', views.tancar_reparacio, name="tancar_reparacio"),
+    path('genera_factura/', views.genera_factura, name="genera_factura"),
+    path('get_parametres/', views.get_parametres, name="get_parametres"),
+    path('guarda_canvis_props/', views.guarda_canvis_props, name="guarda_canvis_props")
 ]

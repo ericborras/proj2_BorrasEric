@@ -3,7 +3,7 @@ from django.http import HttpResponse
 # Create your views here.
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
-from . import utils, models
+from . import utils, models, parametres
 from django.core.paginator import Paginator
 import json
 
@@ -133,10 +133,11 @@ def reparacio(request, id_reparacio):
     packs_json = utils.get_packs_json()
     linies_reparacio = utils.get_linies_reparacio(id_reparacio)
     estat_reparacio = utils.get_estat_reparacio(id_reparacio)
+    te_factura = utils.get_es_reparacio_factura(id_reparacio)
     #return render(request, 'nova_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicles':vehicles, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'clients':clients})
 
     reparacio = get_object_or_404(models.Reparacio, pk=id_reparacio)
-    return render(request, 'editar_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicle':vehicle, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'client':client, 'reparacio': reparacio, "packs_json":packs_json, 'linies_reparacio':linies_reparacio,'estat_reparacio':estat_reparacio})
+    return render(request, 'editar_reparacio.html', {'dades_usuari':request.session['dades_usuari'], 'vehicle':vehicle, 'definicio_tipus_linia':definicio_tipus_linia, 'packs':packs, 'client':client, 'reparacio': reparacio, "packs_json":packs_json, 'linies_reparacio':linies_reparacio,'estat_reparacio':estat_reparacio, 'te_factura':te_factura})
 
 def add_vehicle(request):
     if(request.method == 'POST'):
@@ -260,3 +261,40 @@ def rebutjar_reparacio(request):
         return utils.rebutjar_reparacio(request, id_reparacio)
 
     return render(request, 'index.html')
+
+def tancar_reparacio(request):
+    if(request.method == 'POST'):
+        id_reparacio = request.POST.get('id_reparacio')
+
+        return utils.tancar_reparacio(request, id_reparacio)
+
+    return render(request, 'index.html')
+
+def genera_factura(request):
+    if(request.method == 'POST'):
+        id_reparacio = request.POST.get('id_reparacio')
+        descomptes = json.loads(request.POST.get('descomptes'))
+        return utils.genera_factura(request, id_reparacio, descomptes)
+
+    return render(request, 'index.html')
+
+def get_parametres(request):
+    #Obtenir els paràmetres del fitxer parametres.py
+    config = parametres.Configuracio('config.json')
+    valor_iva = config.get_valor('iva')
+    valor_preu_ma_obra = config.get_valor('preu_ma_obra')
+
+
+    return render(request, 'parametres.html', {'dades_usuari':request.session['dades_usuari'], 'iva':valor_iva, 'preu_ma_obra':valor_preu_ma_obra})
+
+
+def guarda_canvis_props(request):
+    if(request.method == 'POST'):
+        ma_obra = request.POST.get('ma_obra')
+        iva = request.POST.get('iva')
+
+        return utils.guarda_canvis_props(request, ma_obra, iva)
+
+    return render(request, 'index.html')
+
+ 
