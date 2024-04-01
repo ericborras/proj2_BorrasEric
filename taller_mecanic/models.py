@@ -73,7 +73,6 @@ class EstatReparacio(models.Model):
 class Factura(models.Model):
     num_fact = models.CharField(max_length=18)
     iva = models.DecimalField(max_digits=10, decimal_places=2)
-    preu_ma_obra = models.DecimalField(max_digits=10, decimal_places=2)
     id_reparacio = models.ForeignKey('Reparacio', models.DO_NOTHING, db_column='id_reparacio')
     data_factura = models.DateField()
     pagada = models.IntegerField()

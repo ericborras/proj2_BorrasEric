@@ -8,7 +8,7 @@ import bcrypt
 from datetime import datetime
 from django.urls import reverse
 import json
-
+from decimal import Decimal
 
 #Funció que comprova si el hash i login de l'usuari existeix a la base de dades
 def existeix_usuari(request, login, password):
@@ -826,16 +826,38 @@ def genera_factura(request, id_reparacio, descomptes):
                 "UPDATE linies_reparacio SET descompte = %s, preu_total = (preu * quantitat) - (preu * quantitat * %s / 100) WHERE id = %s",
                 [dte, dte, id_linia_reparacio]
             )
+        #Saber la suma de preu_total de les reparacions
+        query = """
+            SELECT SUM(preu_total) AS base
+            FROM linies_reparacio
+            WHERE id_reparacio = %s
+        """
+
+        with connection.cursor() as cursor:
+            cursor.execute(query,[id_reparacio])
+            row = cursor.fetchone()
+        preu_total_linies = 0
+        if row:
+            preu_total_linies = row[0]
+        else:
+            return JsonResponse({'success': False})
+
 
         #Una vegada actualitzats, crear registre a la taula factura, amb la suma de preu_total
         data_actual = datetime.now().date()
-        cursor.execute("INSERT INTO reparacio (data_alta, id_estat_reparacio, id_usuari, id_vehicle) VALUES (%s, %s, %s, %s)", [datetime.now().date(), 1, request.session['dades_usuari']['id_tipus_usuari'], id_vehicle])
+        #Obtenir IVA i preu_ma_obra de config.json
+        config = parametres.Configuracio('config.json')
+        iva = config.get_valor('iva')
+        #Calcular totals
+        suma_base = preu_total_linies
+        quota_iva = (Decimal(iva)/Decimal(100))*suma_base
+        total_factura = suma_base+quota_iva
+
+        cursor = connections['default'].cursor()
+        cursor.execute("INSERT INTO factura (iva, id_reparacio, data_factura, base_imposable, quota_iva, total_factura) VALUES (%s,%s,%s,%s,%s,%s)", [iva, id_reparacio, data_actual, suma_base, quota_iva, total_factura])
         
         return JsonResponse({'success':True})
 
-
-
-        
     except Exception as e:
         return JsonResponse({'success': False, 'msg': e})
     
@@ -885,4 +907,31 @@ def guarda_canvis_props(request, ma_obra, iva):
 
         return JsonResponse({'success':True})
     except Exception as e:
-        return JsonResponse({'success':False}) 
+        return JsonResponse({'success':False})
+    
+def guarda_canvis_factura(request, num_fact):
+    try:
+        cursor = connections['default'].cursor()
+        # Ejecutar la consulta SQL -1
+        cursor.execute("update comptadors set comptador = %s where concepte = 'F'", [num_fact])
+
+        return JsonResponse({'success':True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'msg': e})
+    
+def get_num_fact():
+    query = """
+        SELECT comptador
+        from comptadors where concepte = 'F'
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        row = cursor.fetchone()
+
+    if row:
+        
+        # Crea una instancia de modelo Usuari con los datos de la fila obtenida
+        return row[0]
+    else:
+        return -1

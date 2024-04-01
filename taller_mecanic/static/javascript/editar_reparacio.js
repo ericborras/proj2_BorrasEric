@@ -88,10 +88,11 @@ function f_generarFactura(){
                 success: function(data) {
                     if (data.success) {
 
-                        //document.getElementById('generar_factura').style.display = "none";
+                        document.getElementById('generar_factura').style.display = "none";
                         //Deshabilitar tots els inputs de dte
                         inputs.forEach(function(input) {
-                            //document.getElementById(input.id).disabled = true;
+                            document.getElementById(input.id).disabled = true;
+                            console.info('!!!!');
                         });
 
                         Swal.fire({
@@ -662,7 +663,7 @@ function f_afegeixFeinesMecanic(){
     //1.
     let desc_fm = document.getElementById('desc_fm').value;
     let qt_fm = document.getElementById('qt_fm').value;
-    let preu_fm = document.getElementById('preu_fm').value;
+    //let preu_fm = document.getElementById('preu_fm').value;
 
     //2.
     var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
@@ -673,7 +674,7 @@ function f_afegeixFeinesMecanic(){
             'id_reparacio': id_reparacio,
             'desc': desc_fm,
             'qt': qt_fm,
-            'preu': preu_fm,
+            //'preu': preu_fm,
             'csrfmiddlewaretoken': csrfToken,
         },
         success: function(data) {
@@ -1286,7 +1287,9 @@ function f_generaFeinesMecanic(id_linia_reparacio) {
     var elementos = [
         { label: 'Descripció:', id: id_linia_reparacio + '-desc_fm', col: 'col-lg-4 col-xs-4 ml-3', tipo: 'text', valor: document.getElementById('desc_fm').value },
         { label: 'Quantitat:', id: id_linia_reparacio + '-qt_fm', col: 'col-lg-1 col-xs-1', tipo: 'text', valor: document.getElementById('qt_fm').value, errorId: id_linia_reparacio + '-fm_qt_error' },
+        /*
         { label: 'Preu:', id: id_linia_reparacio + '-preu_fm', col: 'col-lg-2 col-xs-2', tipo: 'text', errorId: id_linia_reparacio + '-fm_preu_error', valor: document.getElementById('preu_fm').value }
+        */
     ];
 
     elementos.forEach(function(elemento) {
@@ -1359,7 +1362,7 @@ function f_generaFeinesMecanic(id_linia_reparacio) {
     //Netejar camps de text
     document.getElementById('desc_fm').value = "";
     document.getElementById('qt_fm').value = "1";
-    document.getElementById('preu_fm').value = "";
+    //document.getElementById('preu_fm').value = "";
 }
 
     
@@ -1370,22 +1373,23 @@ function f_guardaCanvis(id_linia_reparacio){
 
     let desc = document.getElementById(id_linia_reparacio+'-desc_fm').value;
     let qt = document.getElementById(id_linia_reparacio+'-qt_fm').value;
-    let preu = document.getElementById(id_linia_reparacio+'-preu_fm').value;
+    //let preu = document.getElementById(id_linia_reparacio+'-preu_fm').value;
 
-    const valida_preu = /^\d+(\.\d+)?$/;
+    //const valida_preu = /^\d+(\.\d+)?$/;
     const valida_qt = /^\d+(\.(25|5|75|0))?$/;
-    let b_valida_preu = true;
+    //let b_valida_preu = true;
     let b_valida_qt = true;
-
+    /*
     if(preu.length!=0){
         b_valida_preu = valida_preu.test(preu);
     }
+    */
     if(qt.length!=0){
         b_valida_qt = valida_qt.test(qt);
     }
 
 
-    if(desc.length>0 && b_valida_preu && b_valida_qt){
+    if(desc.length>0 && /*b_valida_preu &&*/ b_valida_qt){
         var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
         $.ajax({
             type: 'POST',
@@ -1395,7 +1399,7 @@ function f_guardaCanvis(id_linia_reparacio){
                 'id_linia_reparacio': id_linia_reparacio,
                 'desc': desc,
                 'qt': qt,
-                'preu': preu,
+                //'preu': preu,
                 'csrfmiddlewaretoken': csrfToken,
             },
             success: function(data) {
@@ -1514,21 +1518,21 @@ function f_feines_mecanic_escoltadors(){
     //Afegir escoltadors
     document.getElementById('desc_fm').addEventListener('input', f_comprovarFeinesMecanic);
     document.getElementById('qt_fm').addEventListener('input', f_comprovarFeinesMecanic);
-    document.getElementById('preu_fm').addEventListener('input', f_comprovarFeinesMecanic);
+    //document.getElementById('preu_fm').addEventListener('input', f_comprovarFeinesMecanic);
 }
 
 function f_comprovarFeinesMecanic(){
     let desc = document.getElementById('desc_fm').value;
     let qt = document.getElementById('qt_fm').value;
-    let preu = document.getElementById('preu_fm').value;
+    //let preu = document.getElementById('preu_fm').value;
 
     if(desc.length==0){
         document.getElementById('add_fm').disabled = true;
-        f_validarPreu(preu,"fm_preu_error");
+        //f_validarPreu(preu,"fm_preu_error");
         f_validarQuantitats(qt,"fm_qt_error");
 
     }else{    
-        document.getElementById('add_fm').disabled = f_validarPreu(preu,"fm_preu_error") || f_validarQuantitats(qt,"fm_qt_error") || (desc.length > 0 ? false : true);
+        document.getElementById('add_fm').disabled = /*f_validarPreu(preu,"fm_preu_error") ||*/ f_validarQuantitats(qt,"fm_qt_error") || (desc.length > 0 ? false : true);
     }
 }
 

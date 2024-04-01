@@ -29,5 +29,6 @@ urlpatterns = [
     path('tancar_reparacio/', views.tancar_reparacio, name="tancar_reparacio"),
     path('genera_factura/', views.genera_factura, name="genera_factura"),
     path('get_parametres/', views.get_parametres, name="get_parametres"),
-    path('guarda_canvis_props/', views.guarda_canvis_props, name="guarda_canvis_props")
+    path('guarda_canvis_props/', views.guarda_canvis_props, name="guarda_canvis_props"),
+    path('guarda_canvis_factura/', views.guarda_canvis_factura, name="guarda_canvis_factura")
 ]

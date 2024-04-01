@@ -288,11 +288,11 @@
                         <div id="fm_qt_error" class="error"></div>
                     </div>
                     
-                    <div class="col-lg-1 col-xs-1">
+                    <div class="col-lg-1 col-xs-1" style="display: none;">
                         <label>Preu:</label>
                     </div>
                     <div class="col-lg-2 col-xs-2">
-                        <input type="text" class="form-control mb-2" id="preu_fm" />
+                        <input type="text" class="form-control mb-2" id="preu_fm" style="display:none"/>
                         <div id="fm_preu_error" class="error"></div>
                     </div> 
                     <div class="col-lg-1 col-xs-1">
@@ -339,7 +339,7 @@
                             <label>Preu:</label>
                         </div>
                         <div class="col-lg-2 col-xs-2">
-                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_fm" value="{{ lr.preu }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %}/>
+                            <input type="text" class="form-control mb-2" id="{{ lr.id }}-preu_fm" value="{{ lr.preu }}" {% if dades_usuari.id_tipus_usuari == 1 %} disabled {% endif %} disabled/>
                             <div id="{{ lr.id }}-fm_preu_error" class="error"></div>
                         </div>
                         

@@ -155,7 +155,8 @@ def add_feina_mecanic(request):
         id_reparacio = request.POST.get('id_reparacio')
         desc = request.POST.get('desc')
         qt = request.POST.get('qt')
-        preu = request.POST.get('preu')
+        config = parametres.Configuracio('config.json')
+        preu = config.get_valor('preu_ma_obra')
         return utils.add_feina_mecanic(request, id_reparacio, desc, qt, preu)
     
     return render(request, 'index.html')
@@ -167,7 +168,8 @@ def editar_feina_mecanic(request):
         id_linia_reparacio = request.POST.get('id_linia_reparacio')
         desc = request.POST.get('desc')
         qt = request.POST.get('qt')
-        preu = request.POST.get('preu')
+        config = parametres.Configuracio('config.json')
+        preu = config.get_valor('preu_ma_obra')
 
         return utils.editar_feina_mecanic(request, id_reparacio, id_linia_reparacio, desc, qt, preu)
 
@@ -283,9 +285,10 @@ def get_parametres(request):
     config = parametres.Configuracio('config.json')
     valor_iva = config.get_valor('iva')
     valor_preu_ma_obra = config.get_valor('preu_ma_obra')
+    num_fact = utils.get_num_fact()
 
 
-    return render(request, 'parametres.html', {'dades_usuari':request.session['dades_usuari'], 'iva':valor_iva, 'preu_ma_obra':valor_preu_ma_obra})
+    return render(request, 'parametres.html', {'dades_usuari':request.session['dades_usuari'], 'iva':valor_iva, 'preu_ma_obra':valor_preu_ma_obra, 'num_fact':num_fact})
 
 
 def guarda_canvis_props(request):
@@ -294,6 +297,15 @@ def guarda_canvis_props(request):
         iva = request.POST.get('iva')
 
         return utils.guarda_canvis_props(request, ma_obra, iva)
+
+    return render(request, 'index.html')
+
+
+def guarda_canvis_factura(request):
+    if(request.method == 'POST'):
+        num_fact = request.POST.get('num_fact')
+
+        return utils.guarda_canvis_factura(request, num_fact)
 
     return render(request, 'index.html')
 
