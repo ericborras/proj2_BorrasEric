@@ -1,4 +1,6 @@
 {
     "iva": "21",
-    "preu_ma_obra": "55"
+    "preu_ma_obra": "55",
+    "jasperadmin_usuari": "jasperadmin",
+    "jasperadmin_pw": "bitnami" 
 }

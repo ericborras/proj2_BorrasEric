@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 import json
 
 def index(request):
+    utils.obrir_factura(1)
     return render(request, 'index.html')
 
 def login(request):

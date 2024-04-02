@@ -9,6 +9,8 @@ from datetime import datetime
 from django.urls import reverse
 import json
 from decimal import Decimal
+import requests
+import webbrowser
 
 #Funció que comprova si el hash i login de l'usuari existeix a la base de dades
 def existeix_usuari(request, login, password):
@@ -855,6 +857,10 @@ def genera_factura(request, id_reparacio, descomptes):
 
         cursor = connections['default'].cursor()
         cursor.execute("INSERT INTO factura (iva, id_reparacio, data_factura, base_imposable, quota_iva, total_factura) VALUES (%s,%s,%s,%s,%s,%s)", [iva, id_reparacio, data_actual, suma_base, quota_iva, total_factura])
+
+        #Obrir factura
+        id_factura = cursor.lastrowid
+        obrir_factura(id_factura)
         
         return JsonResponse({'success':True})
 
@@ -935,3 +941,43 @@ def get_num_fact():
         return row[0]
     else:
         return -1
+    
+
+def obrir_factura(id_factura):
+    # URL del servidor JasperReports y ruta al informe
+    servidor_jasper = 'http://127.0.0.1:8080'
+    ruta_informe = '/jasperserver/rest_v2/projecte2/taller_mecanic_factura'
+
+    #Obtenir dades json
+    config = parametres.Configuracio('config.json')
+    jasperadmin_usuari = config.get_valor('jasperadmin_usuari')
+    jasperadmin_pw = config.get_valor('jasperadmin_pw')
+
+
+    # Parámetros del informe
+    parametres = {
+        'id_factura': id_factura
+    }
+
+    # Configurar la solicitud HTTP con los datos necesarios
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    auth = (jasperadmin_usuari, jasperadmin_pw)
+
+    # Enviar la solicitud para ejecutar el informe
+    response = requests.post(servidor_jasper + ruta_informe, headers=headers, auth=auth, json=parametres)
+
+    # Verificar si la solicitud fue exitosa
+    if response.status_code == 200:
+        # El informe se ejecutó correctamente, procesar la respuesta
+        datos_informe = response.json()
+        # Procesar los datos del informe...
+        print("Informe ejecutado correctamente:", datos_informe)
+
+         # Abrir el informe en una pestaña del navegador
+        url_informe = datos_informe['url']  # Suponiendo que la respuesta JSON contiene la URL del informe
+        webbrowser.open_new_tab(url_informe)
+    else:
+        # Ocurrió un error al ejecutar el informe
+        print("Error al ejecutar el informe:", response.text)
